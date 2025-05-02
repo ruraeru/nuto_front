@@ -27,7 +27,7 @@ export default function Page() {
             <div className={`fixed inset-y-0 left-0 z-50 w-56 transition-transform duration-300 ease-in-out transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:relative lg:inset-0 lg:z-0`}>
                 <Sidebar />
             </div>
-            <div className="m-5">
+            <div className="m-5 flex flex-col gap-5">
                 <div>
                     <h1 className="font-extrabold text-4xl">이연우님의 소비 패턴</h1>
                 </div>
@@ -38,7 +38,7 @@ export default function Page() {
                                 <h3>카테고리별 소비 내역</h3>
                                 <p>모두보기</p>
                             </div>
-                            <div className="flex gap-5 bg-gray-500 p-5 rounded-2xl">
+                            <div className="flex gap-5 bg-gray-500 p-5 rounded-2xl justify-around items-center h-[160px]">
                                 {[1, 2, 3].map((item, index) => (
                                     <div key={index} className="flex flex-col items-center gap-3">
                                         <div className="bg-gray-200 size-16 rounded-2xl flex items-center justify-center">
@@ -56,7 +56,7 @@ export default function Page() {
                                 <h3>금융 상품 추천</h3>
                                 <p>금융 상품 추천 받기</p>
                             </div>
-                            <div className="flex gap-5 bg-gray-500 p-5 rounded-2xl aspect-square items-center justify-center">
+                            <div className="flex gap-5 bg-gray-500 p-5 rounded-2xl w-[416px] h-[278px] items-center justify-center">
                                 <h1>금융 상품 추천</h1>
                             </div>
                         </div>
