@@ -23,8 +23,8 @@ export default function Page() {
                     </form>
                     <div className="flex gap-5 items-center justify-center">
                         <Link href="findPassword">비밀번호 찾기</Link>
-                        <Link href="findPassword">아이디 찾기</Link>
-                        <Link href="findPassword">회원가입</Link>
+                        <Link href="findId">아이디 찾기</Link>
+                        <Link href="signup">회원가입</Link>
                     </div>
                     <div className="flex gap-6 justify-center">
                         <div className="size-12 bg-amber-50 rounded-full" />
