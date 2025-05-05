@@ -79,7 +79,7 @@ export default function Sidebar() {
             resetExpandedMenus[menu] = true;
             setExpandedMenus(resetExpandedMenus);
         }
-        router.push(menu)
+        router.push(menu);
         setActiveMenu(menu);
     };
 
