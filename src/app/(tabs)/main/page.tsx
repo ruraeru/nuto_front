@@ -1,11 +1,8 @@
 "use client"
 
 import Calendar, { EventInfo, Events } from "@/components/Calendar";
-import Sidebar from "@/components/Sidebar";
-import { useState } from "react"
 
 export default function Page() {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
     const eventsData: Events = {
         '2025-05-02': { description: ['교통비', '식비 지출'], amount: 90000 },
         '2025-05-10': { description: ['월세 자동이체'], amount: 500000 },
@@ -19,14 +16,6 @@ export default function Page() {
     };
     return (
         <div className="p-16 h-screen flex">
-            {sidebarOpen && (
-                <div className="fixed inset-0 z-40 lg:hidden" onClick={() => setSidebarOpen(false)}>
-                    <div className="absolute inset-0 bg-gray-600 bg-opacity-75"></div>
-                </div>
-            )}
-            <div className={`fixed inset-y-0 left-0 z-50 w-56 transition-transform duration-300 ease-in-out transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:relative lg:inset-0 lg:z-0`}>
-                <Sidebar />
-            </div>
             <div className="m-5 flex flex-col gap-5">
                 <div>
                     <h1 className="font-extrabold text-4xl">이연우님의 소비 패턴</h1>

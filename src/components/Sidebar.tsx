@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface NavItemProps {
     icon: React.ReactNode;
@@ -49,18 +50,19 @@ const NavItem: React.FC<NavItemProps> = ({
     );
 };
 
-const SubNavItem: React.FC<{ label: string; active?: boolean }> = ({ label, active = false }) => {
+const SubNavItem: React.FC<{ label: string; active?: boolean, url?: string }> = ({ label, active = false, url = "" }) => {
     return (
         <div
             className={`px-3 py-2 text-sm rounded-md cursor-pointer mb-1 ${active ? 'text-orange-500' : 'text-gray-600 hover:bg-gray-200'}`}
         >
-            {label}
+            <Link href={url}>{label}</Link>
         </div>
     );
 };
 
 export default function Sidebar() {
-    const [activeMenu, setActiveMenu] = useState<string | null>('dashboard');
+    const router = useRouter();
+    const [activeMenu, setActiveMenu] = useState<string | null>('home');
     const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({
         // dashboard: true,
     });
@@ -77,11 +79,12 @@ export default function Sidebar() {
             resetExpandedMenus[menu] = true;
             setExpandedMenus(resetExpandedMenus);
         }
+        router.push(menu)
         setActiveMenu(menu);
     };
 
     return (
-        <div className="w-56 h-full bg-gray-100 rounded-lg p-4 flex flex-col">
+        <div className="w-56 h-fit bg-gray-100 rounded-lg p-4 flex flex-col">
             <div className="text-center mb-8 mt-2">
                 <h1 className="text-2xl font-medium">nuto</h1>
             </div>
@@ -118,7 +121,7 @@ export default function Sidebar() {
                     onClick={() => toggleMenu('dashboard')}
                     active={activeMenu === 'dashboard'}
                 >
-                    <SubNavItem label="카드 혜택" />
+                    <SubNavItem label="카드 혜택" url='/dashboard' />
                     <SubNavItem label="한달 그래프" />
                     <SubNavItem label="카테고리" />
                     <SubNavItem label="소비 내역" />
