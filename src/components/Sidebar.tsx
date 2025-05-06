@@ -4,6 +4,16 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+// 메뉴와 경로 매핑 객체
+const menuPaths: { [key: string]: string } = {
+    home: '/home',
+    dashboard: '/dashboard',
+    product: '/product',
+    spending: '/spending',
+    notification: '/notification',
+    calendar: '/calendar',
+};
+
 interface NavItemProps {
     icon: React.ReactNode;
     label: string;
@@ -21,12 +31,13 @@ const NavItem: React.FC<NavItemProps> = ({
     expanded = false,
     hasChildren = false,
     onClick,
-    children
+    children,
 }) => {
     return (
         <div className="mb-1">
             <div
-                className={`flex items-center justify-between px-3 py-2 rounded-md cursor-pointer ${active ? 'bg-orange-400 text-white' : 'text-gray-600 hover:bg-gray-200'}`}
+                className={`flex items-center justify-between px-3 py-2 rounded-md cursor-pointer ${active ? 'bg-orange-400 text-white' : 'text-gray-600 hover:bg-gray-200'
+                    }`}
                 onClick={onClick}
             >
                 <div className="flex items-center">
@@ -41,19 +52,16 @@ const NavItem: React.FC<NavItemProps> = ({
                     </span>
                 )}
             </div>
-            {expanded && children && (
-                <div className="pl-8 mt-1">
-                    {children}
-                </div>
-            )}
+            {expanded && children && <div className="pl-8 mt-1">{children}</div>}
         </div>
     );
 };
 
-const SubNavItem: React.FC<{ label: string; active?: boolean, url?: string }> = ({ label, active = false, url = "" }) => {
+const SubNavItem: React.FC<{ label: string; active?: boolean; url?: string }> = ({ label, active = false, url = '' }) => {
     return (
         <div
-            className={`px-3 py-2 text-sm rounded-md cursor-pointer mb-1 ${active ? 'text-orange-500' : 'text-gray-600 hover:bg-gray-200'}`}
+            className={`px-3 py-2 text-sm rounded-md cursor-pointer mb-1 ${active ? 'text-orange-500' : 'text-gray-600 hover:bg-gray-200'
+                }`}
         >
             <Link href={url}>{label}</Link>
         </div>
@@ -63,33 +71,25 @@ const SubNavItem: React.FC<{ label: string; active?: boolean, url?: string }> = 
 export default function Sidebar() {
     const router = useRouter();
     const [activeMenu, setActiveMenu] = useState<string | null>('home');
-    const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({
-        // dashboard: true,
-    });
+    const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({});
 
     const toggleMenu = (menu: string) => {
-        if (expandedMenus[menu]) {
-            setExpandedMenus(prev => ({
-                ...prev,
-                [menu]: !prev[menu]
-            }));
-        }
-        else {
-            const resetExpandedMenus: { [key: string]: boolean } = {};
-            resetExpandedMenus[menu] = true;
-            setExpandedMenus(resetExpandedMenus);
-        }
-        router.push(menu);
+        setExpandedMenus((prev) => ({
+            ...prev,
+            [menu]: !prev[menu] || false, // 토글 시 다른 메뉴 접기
+        }));
         setActiveMenu(menu);
+        // 매핑된 절대 경로로 이동
+        const path = menuPaths[menu] || `/${menu}`;
+        router.push(path);
     };
 
     return (
-        <div className="w-56 h-screen bg-gray-100 rounded-lg p-4 flex flex-col ">
+        <div className="w-56 h-screen bg-gray-100 rounded-lg p-4 flex flex-col">
             <div className="text-center mb-8 mt-2">
                 <h1 className="text-2xl font-medium">nuto</h1>
             </div>
 
-            {/* Navigation */}
             <nav className="flex-1">
                 <NavItem
                     icon={
@@ -120,12 +120,11 @@ export default function Sidebar() {
                     onClick={() => toggleMenu('dashboard')}
                     active={activeMenu === 'dashboard'}
                 >
-                    <SubNavItem label="카드 총액" url='/cards' />
-                    <SubNavItem label="한달 그래프" url='/cards/graph' />
+                    <SubNavItem label="카드 총액" url="/cards" />
+                    <SubNavItem label="한달 그래프" url="/cards/graph" />
                     <SubNavItem label="카테고리" />
                     <SubNavItem label="소비 내역" />
                 </NavItem>
-
                 <NavItem
                     icon={
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -143,7 +142,6 @@ export default function Sidebar() {
                     <SubNavItem label="카테고리" />
                     <SubNavItem label="소비 내역" />
                 </NavItem>
-
                 <NavItem
                     icon={
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -152,9 +150,8 @@ export default function Sidebar() {
                     }
                     label="Spending history"
                     active={activeMenu === 'spending'}
-                    onClick={() => setActiveMenu('spending')}
+                    onClick={() => toggleMenu('spending')}
                 />
-
                 <NavItem
                     icon={
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -163,9 +160,8 @@ export default function Sidebar() {
                     }
                     label="Notification"
                     active={activeMenu === 'notification'}
-                    onClick={() => setActiveMenu('notification')}
+                    onClick={() => toggleMenu('notification')}
                 />
-
                 <NavItem
                     icon={
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -174,7 +170,7 @@ export default function Sidebar() {
                     }
                     label="Calendar"
                     active={activeMenu === 'calendar'}
-                    onClick={() => setActiveMenu('calendar')}
+                    onClick={() => toggleMenu('calendar')}
                 />
             </nav>
         </div>

@@ -16,7 +16,7 @@ export default function Layout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className="max-h-[1625px] flex justify-center relative">
+        <div className="max-h-[1625px] flex justify-center relative ">
             <Sidebar />
             <div className="w-[1280px] m-5">
                 {children}

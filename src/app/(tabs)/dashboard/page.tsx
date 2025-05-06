@@ -97,7 +97,9 @@ export default function Page() {
                     <div className="w-[730px] h-[460px]">
                         <div className="flex justify-between w-full">
                             <p>소비 그래프</p>
-                            <span>모두 보기</span>
+                            <span>
+                                <Link href="/dashboard/graph">모두 보기</Link>
+                            </span>
                         </div>
                         <div className="h-[460px] w-full">
                             <Line
