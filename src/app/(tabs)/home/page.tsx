@@ -15,7 +15,7 @@ export default function Page() {
         }
     };
     return (
-        <div className="p-16 h-screen flex">
+        <div className="h-screen flex justify-center">
             <div className="m-5 flex flex-col gap-5">
                 <div>
                     <h1 className="font-extrabold text-4xl">이연우님의 소비 패턴</h1>

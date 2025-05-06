@@ -84,7 +84,7 @@ export default function Sidebar() {
     };
 
     return (
-        <div className="w-56 h-full bg-gray-100 rounded-lg p-4 flex flex-col ">
+        <div className="w-56 h-screen bg-gray-100 rounded-lg p-4 flex flex-col ">
             <div className="text-center mb-8 mt-2">
                 <h1 className="text-2xl font-medium">nuto</h1>
             </div>
@@ -108,7 +108,6 @@ export default function Sidebar() {
                     <SubNavItem label="카테고리" />
                     <SubNavItem label="소비 내역" />
                 </NavItem>
-
                 <NavItem
                     icon={
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

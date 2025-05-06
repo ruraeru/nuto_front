@@ -18,7 +18,9 @@ export default function Layout({
     return (
         <div className="max-h-[1625px] flex justify-center relative">
             <Sidebar />
-            {children}
+            <div className="w-[1280px] m-5">
+                {children}
+            </div>
         </div>
     );
 }
