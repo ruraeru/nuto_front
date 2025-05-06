@@ -120,8 +120,8 @@ export default function Sidebar() {
                     onClick={() => toggleMenu('dashboard')}
                     active={activeMenu === 'dashboard'}
                 >
-                    <SubNavItem label="카드 혜택" url='/dashboard' />
-                    <SubNavItem label="한달 그래프" />
+                    <SubNavItem label="카드 총액" url='/cards' />
+                    <SubNavItem label="한달 그래프" url='/cards/graph' />
                     <SubNavItem label="카테고리" />
                     <SubNavItem label="소비 내역" />
                 </NavItem>
