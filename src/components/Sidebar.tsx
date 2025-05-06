@@ -84,7 +84,7 @@ export default function Sidebar() {
     };
 
     return (
-        <div className="w-56 h-fit bg-gray-100 rounded-lg p-4 flex flex-col">
+        <div className="w-56 h-full bg-gray-100 rounded-lg p-4 flex flex-col ">
             <div className="text-center mb-8 mt-2">
                 <h1 className="text-2xl font-medium">nuto</h1>
             </div>

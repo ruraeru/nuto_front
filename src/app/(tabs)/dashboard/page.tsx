@@ -64,9 +64,9 @@ export default function Page() {
     };
 
     return (
-        <div className="m-5 flex flex-col w-screen gap-4">
+        <div className="m-5 max-h-[1625px] overflow-y-auto flex flex-col w-[1280px] gap-4">
             <div className="flex justify-center gap-4">
-                <div className="flex flex-col w-full gap-4">
+                <div className="flex flex-col w-[730px] gap-4">
                     <div className="flex justify-between w-full">
                         <p>My Cards</p>
                         <span>모두 보기</span>
@@ -89,7 +89,7 @@ export default function Page() {
                     </div>
                 </div>
             </div>
-            <div className="flex justify-between gap-4">
+            <div className="flex justify-center gap-4">
                 <div className="w-[730px] h-[460px]">
                     <div className="flex justify-between w-full">
                         <p>소비 그래프</p>
@@ -164,7 +164,7 @@ export default function Page() {
                     </div>
                 </div>
             </div>
-            <div className="flex justify-between gap-4">
+            <div className="flex justify-center gap-4">
                 <div className="w-[730px]">
                     <div className="flex justify-between w-full">
                         <p>한달 소비 내역</p>
