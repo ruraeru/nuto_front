@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { CalendarDaysIcon, HomeIcon, RectangleStackIcon, Squares2X2Icon } from '@heroicons/react/24/solid';
 
 // 메뉴와 경로 매핑 객체
 const menuPaths: { [key: string]: string } = {
@@ -21,7 +23,9 @@ interface NavItemProps {
     expanded?: boolean;
     hasChildren?: boolean;
     onClick?: () => void;
+    onToggle?: () => void;
     children?: React.ReactNode;
+    isCollapsed?: boolean;
 }
 
 const NavItem: React.FC<NavItemProps> = ({
@@ -31,36 +35,70 @@ const NavItem: React.FC<NavItemProps> = ({
     expanded = false,
     hasChildren = false,
     onClick,
+    onToggle,
     children,
+    isCollapsed = false,
 }) => {
+    const handleArrowClick = (e: React.MouseEvent) => {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        if (onToggle) {
+            onToggle();
+        }
+    };
+
     return (
-        <div className="mb-1">
+        <div className="mb-1 relative group">
             <div
-                className={`flex items-center justify-between px-3 py-2 rounded-md cursor-pointer ${active ? 'bg-orange-400 text-white' : 'text-gray-600 hover:bg-gray-200'
-                    }`}
+                className={`flex items-center justify-between px-3 py-2 rounded-md cursor-pointer transition-all duration-200 ${active ? 'bg-[#7CBBDE] text-white' : 'text-gray-600 hover:bg-gray-200'
+                    } ${isCollapsed ? 'justify-center' : ''}`}
                 onClick={onClick}
             >
-                <div className="flex items-center">
-                    {icon}
-                    <span className="ml-2">{label}</span>
+                <div className={`flex items-center ${isCollapsed ? 'justify-center' : ''}`}>
+                    <div className="flex-shrink-0">
+                        {icon}
+                    </div>
+                    <span className={`ml-2 transition-all duration-200 ${isCollapsed ? ' hidden' : 'opacity-100'
+                        }`}>
+                        {label}
+                    </span>
                 </div>
-                {hasChildren && (
-                    <span className={`transform ${expanded ? 'rotate-180' : ''} transition-transform`}>
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                {hasChildren && !isCollapsed && (
+                    <span
+                        className={`transform ${expanded ? 'rotate-180' : ''} transition-transform duration-200 p-1 rounded hover:bg-opacity-50`}
+                        onClick={handleArrowClick}
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                     </span>
                 )}
             </div>
-            {expanded && children && <div className="pl-8 mt-1">{children}</div>}
+
+            {/* 축소 상태에서 호버 시 표시되는 툴팁 */}
+            {isCollapsed && (
+                <div className="absolute left-full top-0 ml-2 px-3 py-2 bg-gray-800 text-white text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-50 whitespace-nowrap">
+                    {label}
+                    <div className="absolute left-0 top-1/2 transform -translate-x-1 -translate-y-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                </div>
+            )}
+
+            {expanded && children && !isCollapsed && (
+                <div className="pl-8 mt-1 transition-all duration-200">
+                    {children}
+                </div>
+            )}
         </div>
     );
 };
 
-const SubNavItem: React.FC<{ label: string; active?: boolean; url?: string }> = ({ label, active = false, url = '' }) => {
+const SubNavItem: React.FC<{ label: string; active?: boolean; url?: string }> = ({
+    label,
+    active = false,
+    url = ''
+}) => {
     return (
         <div
-            className={`px-3 py-2 text-sm rounded-md cursor-pointer mb-1 ${active ? 'text-orange-500' : 'text-gray-600 hover:bg-gray-200'
+            className={`px-3 py-2 text-sm rounded-md cursor-pointer mb-1 transition-colors duration-200 ${active ? 'text-orange-500' : 'text-gray-600 hover:bg-gray-200'
                 }`}
         >
             <Link href={url}>{label}</Link>
@@ -72,105 +110,128 @@ export default function Sidebar() {
     const router = useRouter();
     const [activeMenu, setActiveMenu] = useState<string | null>('home');
     const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({});
+    const [isHovered, setIsHovered] = useState(false);
 
     const toggleMenu = (menu: string) => {
-        setExpandedMenus((prev) => ({
-            ...prev,
-            [menu]: !prev[menu] || false, // 토글 시 다른 메뉴 접기
-        }));
+        // 축소 상태에서는 토글하지 않고 바로 이동
+        if (!isHovered) {
+            setActiveMenu(menu);
+            const path = menuPaths[menu] || `/${menu}`;
+            router.push(path);
+            return;
+        }
+
+        // 확장 상태에서는 페이지 이동
         setActiveMenu(menu);
-        // 매핑된 절대 경로로 이동
         const path = menuPaths[menu] || `/${menu}`;
         router.push(path);
     };
 
+    const toggleSubMenu = (menu: string) => {
+        // 서브메뉴만 토글 (페이지 이동 없음)
+        setExpandedMenus((prev) => ({
+            ...prev,
+            [menu]: !prev[menu] || false,
+        }));
+    };
+
+    const handleMouseEnter = () => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = () => {
+        setIsHovered(false);
+        // 마우스가 벗어나면 모든 서브메뉴 접기
+        setExpandedMenus({});
+    };
+
     return (
-        <div className="w-56 h-screen bg-gray-100 rounded-lg p-4 flex flex-col">
-            <div className="text-center mb-8 mt-2">
-                <h1 className="text-2xl font-medium">nuto</h1>
+        <div
+            className={`bg-white border-[#7CBBDE] border-1 rounded-lg p-4 flex flex-col transition-all duration-300 ease-in-out ${isHovered ? 'w-[218px]' : 'w-[70px]'
+                } h-fit min-h-[664px]`}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+        >
+            <div className={`mb-6 mt-2 mx-auto transition-all duration-300 ${isHovered ? '' : 'mb-4'
+                }`}>
+                <Image
+                    src="/nuto_Simbol.svg"
+                    alt='nuto_simbol'
+                    width={isHovered ? 60 : 40}
+                    height={isHovered ? 60 : 40}
+                    className="transition-all duration-300"
+                />
             </div>
 
             <nav className="flex-1">
                 <NavItem
-                    icon={
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                    }
+                    icon={<HomeIcon width={18} height={18} />}
                     label="Home"
-                    hasChildren={true}
                     expanded={expandedMenus['home'] || false}
                     onClick={() => toggleMenu('home')}
+                    onToggle={() => toggleSubMenu('home')}
                     active={activeMenu === 'home'}
+                    isCollapsed={!isHovered}
                 >
-                    <SubNavItem label="카드 혜택" />
-                    <SubNavItem label="한달 그래프" />
-                    <SubNavItem label="카테고리" />
-                    <SubNavItem label="소비 내역" />
                 </NavItem>
+
                 <NavItem
-                    icon={
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    }
+                    icon={<RectangleStackIcon width={18} height={18} />}
                     label="Dashboard"
                     hasChildren={true}
                     expanded={expandedMenus['dashboard'] || false}
                     onClick={() => toggleMenu('dashboard')}
+                    onToggle={() => toggleSubMenu('dashboard')}
                     active={activeMenu === 'dashboard'}
+                    isCollapsed={!isHovered}
                 >
                     <SubNavItem label="카드 총액" url="/dashboard/cards" />
                     <SubNavItem label="한달 그래프" url="/dashboard/cards/graph" />
                     <SubNavItem label="카테고리" />
                     <SubNavItem label="소비 내역" url="/dashboard/spendingHistory" />
                 </NavItem>
+
                 <NavItem
-                    icon={
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                        </svg>
-                    }
+                    icon={<Squares2X2Icon width={18} height={18} />}
                     label="Product"
-                    hasChildren={true}
                     expanded={expandedMenus['product'] || false}
                     onClick={() => toggleMenu('product')}
+                    onToggle={() => toggleSubMenu('product')}
                     active={activeMenu === 'product'}
+                    isCollapsed={!isHovered}
                 >
-                    <SubNavItem label="카드 혜택" />
-                    <SubNavItem label="한달 그래프" />
-                    <SubNavItem label="카테고리" />
-                    <SubNavItem label="소비 내역" />
                 </NavItem>
+
                 <NavItem
                     icon={
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     }
                     label="Spending history"
                     active={activeMenu === 'spendingHistory'}
                     onClick={() => toggleMenu('spendingHistory')}
+                    isCollapsed={!isHovered}
                 />
+
                 <NavItem
                     icon={
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                         </svg>
                     }
                     label="Notification"
                     active={activeMenu === 'notification'}
                     onClick={() => toggleMenu('notification')}
+                    isCollapsed={!isHovered}
                 />
+
                 <NavItem
-                    icon={
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                    }
+                    icon={<CalendarDaysIcon width={18} height={18} />}
                     label="Calendar"
                     active={activeMenu === 'calendar'}
                     onClick={() => toggleMenu('calendar')}
+                    isCollapsed={!isHovered}
                 />
             </nav>
         </div>
