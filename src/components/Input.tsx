@@ -18,7 +18,7 @@ const _Input = ({ name, label, errors = [], ...rest }: InputProps & InputHTMLAtt
                     ref={ref}
                     name={name}
                     className="
-                border border-gray-300 rounded-md
+                border border-gray-300 rounded-full
                 px-4 py-3
                 text-base text-gray-900 bg-white
                 transition duration-150 ease-in-out

@@ -19,8 +19,10 @@ body {
 
 @layer components {
   .primary-btn {
-    @apply w-full bg-gray-500 text-white font-medium rounded-md 
-    text-center hover:bg-gray-400 
+    @apply w-full h-[44px] bg-[#C1E7F0] text-base font-medium rounded-full 
+    text-center hover:bg-[#C1E7F0]/80
+    border-1 border-[#7CBBDE]
+    cursor-pointer
     transition-colors;
   }
 }
