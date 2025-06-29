@@ -120,10 +120,10 @@ export default function Sidebar() {
                     onClick={() => toggleMenu('dashboard')}
                     active={activeMenu === 'dashboard'}
                 >
-                    <SubNavItem label="카드 총액" url="/cards" />
-                    <SubNavItem label="한달 그래프" url="/cards/graph" />
+                    <SubNavItem label="카드 총액" url="/dashboard/cards" />
+                    <SubNavItem label="한달 그래프" url="/dashboard/cards/graph" />
                     <SubNavItem label="카테고리" />
-                    <SubNavItem label="소비 내역" />
+                    <SubNavItem label="소비 내역" url="/dashboard/spendingHistory" />
                 </NavItem>
                 <NavItem
                     icon={
@@ -149,8 +149,8 @@ export default function Sidebar() {
                         </svg>
                     }
                     label="Spending history"
-                    active={activeMenu === 'spending'}
-                    onClick={() => toggleMenu('spending')}
+                    active={activeMenu === 'spendingHistory'}
+                    onClick={() => toggleMenu('spendingHistory')}
                 />
                 <NavItem
                     icon={

@@ -1,5 +1,6 @@
 "use client"
-import { Line, Pie } from "react-chartjs-2";
+
+import { Doughnut, Line, Pie } from "react-chartjs-2";
 import {
     Chart as ChartJS,
     ArcElement,
@@ -71,7 +72,7 @@ export default function Page() {
                     <div className="flex justify-between w-full">
                         <p>My Cards</p>
                         <span>
-                            <Link href="/cards">모두 보기</Link>
+                            <Link href="/dashboard/cards">모두 보기</Link>
                         </span>
                     </div>
                     <div className="flex gap-16">
@@ -98,7 +99,7 @@ export default function Page() {
                         <div className="flex justify-between w-full">
                             <p>소비 그래프</p>
                             <span>
-                                <Link href="/dashboard/graph">모두 보기</Link>
+                                <Link href="/dashboard/cards/graph">모두 보기</Link>
                             </span>
                         </div>
                         <div className="h-[460px] w-full">
@@ -156,7 +157,9 @@ export default function Page() {
                     <div className="w-[730px]">
                         <div className="flex justify-between w-full">
                             <p>한달 소비 내역</p>
-                            <span>모두 보기</span>
+                            <span>
+                                <Link href="/dashboard/spendingHistory">모두 보기</Link>
+                            </span>
                         </div>
                         <div className="h-[463px] bg-gray-600 text-white">
                             <table className="w-full">
@@ -224,7 +227,9 @@ export default function Page() {
                             <div className="mb-4">
                                 <span>이번 달 내 소비는?</span>
                             </div>
-                            <div className="bg-gray-500 w-[270px] h-[235px]" />
+                            <div className="bg-gray-500 w-[270px] h-[235px]">
+
+                            </div>
                         </div>
                         <div>
                             <div className="mb-4">
@@ -238,7 +243,25 @@ export default function Page() {
                             <div className="mb-4">
                                 <span>이번 달 내 소비는?</span>
                             </div>
-                            <div className="bg-gray-500 w-[270px] h-[383px]" />
+                            <div className="bg-gray-100 w-[270px] h-[383px]">
+                                <h1>총 소비 : 18K</h1>
+                                <Doughnut data={{
+                                    labels: ["Direct", "Organic", "Paid", "Social"],
+                                    datasets: [
+                                        {
+                                            data: [43, 27, 16, 33],
+                                            backgroundColor: ['#FFA500', '#00FF7F', '#87CEEB', '#FF4040'],
+                                            borderWidth: 1,
+                                        }
+                                    ]
+                                }} options={{
+                                    plugins: {
+                                        legend: {
+                                            position: "bottom"
+                                        }
+                                    }
+                                }} />
+                            </div>
                         </div>
                     </div>
                 </div>

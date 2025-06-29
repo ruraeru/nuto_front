@@ -1,7 +1,6 @@
 import Sidebar from "@/components/Sidebar";
 import type { Metadata } from "next";
 
-
 export const metadata: Metadata = {
     title: "Nuto | 누구나 토닥이는 소비",
     description: "누구나 토닥이는 소비",
@@ -10,17 +9,15 @@ export const metadata: Metadata = {
     }
 };
 
-export default function Layout({
+export default function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
     return (
-        <div className="max-h-[1625px] flex justify-center relative ">
+        <div className={`max-h-[1625px] justify-center flex gap-16`}>
             <Sidebar />
-            <div className="w-[1280px] m-5">
-                {children}
-            </div>
+            {children}
         </div>
     );
 }
