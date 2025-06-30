@@ -83,7 +83,7 @@ const NavItem: React.FC<NavItemProps> = ({
             )}
 
             {expanded && children && !isCollapsed && (
-                <div className="pl-8 mt-1 transition-all duration-200">
+                <div className="pl-8 mt-1 transition-all duration-200 flex flex-col justify-center">
                     {children}
                 </div>
             )}
@@ -97,12 +97,13 @@ const SubNavItem: React.FC<{ label: string; active?: boolean; url?: string }> = 
     url = ''
 }) => {
     return (
-        <div
+        <Link
+            href={url}
             className={`px-3 py-2 text-sm rounded-md cursor-pointer mb-1 transition-colors duration-200 ${active ? 'text-orange-500' : 'text-gray-600 hover:bg-gray-200'
                 }`}
         >
-            <Link href={url}>{label}</Link>
-        </div>
+            {label}
+        </Link>
     );
 };
 

@@ -1,24 +1,66 @@
-import Button from "@/components/Button";
-import Input from "@/components/Input";
-import TagInput from "@/components/TagInput";
-import { PlusIcon } from "@heroicons/react/24/solid";
+"use client"
 
-export default function UploadReceipt() {
+import { ChangeEvent, useActionState, useState } from "react";
+import questionGemini from "./actions";
+import { PhotoIcon } from "@heroicons/react/20/solid";
+import { IinitialState } from "@/types/recieptType";
+import ProductInfoChangeForm from "@/components/reciept-info-change-form"
+
+const initialState: IinitialState = {
+    output: null,
+    prompt: "",
+}
+
+export default function Home() {
+    const [previewImg, setPreivew] = useState<string | null>(null);
+    const [state, action, isPending] = useActionState(questionGemini, initialState);
+    const onImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { target: { files } } = e;
+        if (!files) return;
+        const file = files[0];
+
+        setPreivew(URL.createObjectURL(file));
+    }
     return (
-        <div className="flex justify-between gap-6">
-            <div className="w-[432px] h-[600px] rounded-2xl border-1 border-[#D1D1D1] flex justify-center items-center">
-                <PlusIcon width={85} color="#D1D1D1" />
-            </div>
-            <form className="w-[432px] flex flex-col gap-6">
-                <Input name="receipt" label="파일 명칭" placeholder="파일 이름을 작성해주세요" />
-                <TagInput />
-                <Input name="day" label="날짜" placeholder="날짜를 작성해주세요"
-                    defaultValue={new Date().toISOString().substring(0, 10)} type="date"
+        <div className="flex justify-between pt-20 p-16 gap-5">
+            <form action={action} className="w-full flex flex-col gap-5">
+                <label
+                    htmlFor="photo"
+                    className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed
+                    cursor-pointer bg-center bg-no-repeat bg-contain"
+                    style={{
+                        backgroundImage: previewImg ? `url(${previewImg})` : "none"
+                    }}
+                >
+                    {!previewImg ? (
+                        <>
+                            <PhotoIcon className="w-20" />
+                            <div className="text-neutral-400 text-sm">
+                                사진을 추가해주세요.
+                            </div>
+                        </>
+                    ) : null}
+                </label>
+                <input
+                    id="photo"
+                    className="bg-transparent rounded-md hidden h-10 focus:outline-none ring-2 focus:ring-4 transition ring-neutral-200 focus:ring-slate-500-500 border-none placeholder:text-neutral-400"
+                    type="file"
+                    accept="image/*"
+                    name="imagePart"
+                    onChange={onImageChange}
                 />
-                <Input name="shop_name" label="가게 명칭" placeholder="가게 명칭을 작성해주세요" />
-                <Input name="price" label="금액" placeholder="금액을 작성해주세요" />
-                <Button text="등록하기" />
+                <button type="submit" className="bg-neutral-500 p-5 rounded-full">Parsing</button>
             </form>
+            <div className="w-full flex flex-col gap-5" >
+                {/* <div className="flex items-center justify-center">
+                    {
+                        isPending && (
+                            <div className="animate-spin rounded-full h-16 w-16 border-l-2 border-cyan-600" />
+                        )
+                    }
+                </div> */}
+                <ProductInfoChangeForm isLoading={isPending} initialProductData={state?.output} />
+            </div>
         </div>
-    )
+    );
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface TagInputProps {
     initialTags?: string[];
@@ -8,13 +8,16 @@ interface TagInputProps {
 }
 
 const TagInput: React.FC<TagInputProps> = ({
-    initialTags = ['쇼핑', '식비', '카페', '군것질', '건강'],
+    initialTags = [],
     onTagsChange
 }) => {
     const [tags, setTags] = useState<string[]>(initialTags);
     const [inputValue, setInputValue] = useState<string>('');
     const [showInput, setShowInput] = useState<boolean>(false);
 
+    useEffect(() => {
+        if (initialTags) setTags(initialTags);
+    }, [initialTags]);
     // Hero Icons as SVG components
     const XMarkIcon = () => (
         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -52,7 +55,6 @@ const TagInput: React.FC<TagInputProps> = ({
             setShowInput(false);
         }
     };
-
     return (
         <div className="w-full max-w-md mx-auto bg-white">
             <h2 className="text-lg font-medium mb-4 text-gray-800">카테고리</h2>
