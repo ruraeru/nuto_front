@@ -7,8 +7,9 @@ import Input from "./Input";
 import TagInput from "./TagInput";
 import { RecieptType } from "@/types/recieptType";
 
-function ProductInfoChangeForm({ initialProductData, isLoading }: { initialProductData: RecieptType | null, isLoading: boolean }) {
+function RecieptInfoChangeForm({ initialProductData, isLoading }: { initialProductData: RecieptType | null, isLoading: boolean }) {
     const [productData, setProductData] = useState<RecieptType>(initialProductData || {
+        recieptName: "",
         storeName: "",
         address: "",
         purchaseDate: "",
@@ -43,11 +44,11 @@ function ProductInfoChangeForm({ initialProductData, isLoading }: { initialProdu
                 <div className="*:text-black w-full p-2 *:w-full flex flex-col gap-2">
                     <div className="flex flex-col">
                         <Input
-                            label="이름"
-                            name="storeName"
+                            label="파일 명칭"
+                            name="recieptName"
                             onChange={onChangeInfo}
-                            value={productData?.storeName}
-                            placeholder="가게 명칭을 입력해주세요"
+                            value={productData?.recieptName}
+                            placeholder="파일 이름을 입력해주세요"
                         />
                     </div>
                     <div>
@@ -55,11 +56,29 @@ function ProductInfoChangeForm({ initialProductData, isLoading }: { initialProdu
                     </div>
                     <div className="flex flex-col">
                         <Input
+                            label="결제 시간"
+                            name="purchaseDate"
+                            onChange={onChangeInfo}
+                            value={productData?.purchaseDate}
+                            placeholder="결제 시간을 입력해주세요"
+                        />
+                    </div>
+                    {/* <div className="flex flex-col">
+                        <Input
                             label="주소"
                             name="address"
                             onChange={onChangeInfo}
                             value={productData?.address}
                             placeholder="가게 주소를 작성해주세요"
+                        />
+                    </div> */}
+                    <div className="flex flex-col">
+                        <Input
+                            label="가게 명칭"
+                            name="storeName"
+                            onChange={onChangeInfo}
+                            value={productData?.storeName}
+                            placeholder="가게 명칭을 입력해주세요"
                         />
                     </div>
                     <div className="flex flex-col">
@@ -71,15 +90,7 @@ function ProductInfoChangeForm({ initialProductData, isLoading }: { initialProdu
                             placeholder="금액을 작성해주세요"
                         />
                     </div>
-                    <div className="flex flex-col">
-                        <Input
-                            label="결제 시간"
-                            name="purchaseDate"
-                            onChange={onChangeInfo}
-                            value={productData?.purchaseDate}
-                            placeholder="결제 시간을 입력해주세요"
-                        />
-                    </div>
+
                 </div>
             </div>
             <button disabled={isLoading} onClick={onUpload} className="h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed w-full bg-cyan-500 text-white font-medium rounded-md text-center hover:bg-cyan-400 transition-colors">
@@ -89,4 +100,4 @@ function ProductInfoChangeForm({ initialProductData, isLoading }: { initialProdu
     );
 }
 
-export default React.memo(ProductInfoChangeForm);
+export default React.memo(RecieptInfoChangeForm);

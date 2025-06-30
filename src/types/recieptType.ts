@@ -4,6 +4,7 @@ export type RecieptType = {
   purchaseDate: string;
   category: string[];
   totalAmount: number;
+  recieptName: string;
 };
 
 export interface IinitialState {

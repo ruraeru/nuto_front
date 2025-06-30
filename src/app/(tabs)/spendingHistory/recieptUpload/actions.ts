@@ -68,7 +68,8 @@ const prompt = `
        address: "Address",
        purchaseDate: "YYYY-MM-DD HH:MM:SS",
        totalAmount: totalAmount,
-       category: ["식비", "쇼핑"]
+       category: ["식비", "쇼핑"],
+       recieptName: "",
      }, 
 `;
 
@@ -80,6 +81,7 @@ async function extractOutput(
   const match = output.match(/`json\n([\s\S]*)\n`/);
 
   if (match && match[1]) {
+    console.log(JSON.parse(match[1]));
     return JSON.parse(match[1]);
   }
   return null;

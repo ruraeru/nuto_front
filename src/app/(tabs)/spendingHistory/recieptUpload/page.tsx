@@ -4,14 +4,14 @@ import { ChangeEvent, useActionState, useState } from "react";
 import questionGemini from "./actions";
 import { PhotoIcon } from "@heroicons/react/20/solid";
 import { IinitialState } from "@/types/recieptType";
-import ProductInfoChangeForm from "@/components/reciept-info-change-form"
+import RecieptInfoChangeForm from "@/components/reciept-info-change-form"
 
 const initialState: IinitialState = {
     output: null,
     prompt: "",
 }
 
-export default function Home() {
+export default function RecieptUpload() {
     const [previewImg, setPreivew] = useState<string | null>(null);
     const [state, action, isPending] = useActionState(questionGemini, initialState);
     const onImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +49,7 @@ export default function Home() {
                     name="imagePart"
                     onChange={onImageChange}
                 />
-                <button type="submit" className="bg-neutral-500 p-5 rounded-full">Parsing</button>
+                <button disabled={Boolean(!previewImg)} type="submit" className="bg-cyan-500 cursor-pointer disabled:bg-neutral-500 disabled:cursor-not-allowed p-5 rounded-full">Parsing</button>
             </form>
             <div className="w-full flex flex-col gap-5" >
                 {/* <div className="flex items-center justify-center">
@@ -59,7 +59,7 @@ export default function Home() {
                         )
                     }
                 </div> */}
-                <ProductInfoChangeForm isLoading={isPending} initialProductData={state?.output} />
+                <RecieptInfoChangeForm isLoading={isPending} initialProductData={state?.output} />
             </div>
         </div>
     );
