@@ -21,7 +21,7 @@ interface CardProps {
 
 export default function Card({ gradientColors, cardInfo }: CardProps) {
     return (
-        <div className={`shadow-xl flex flex-col justify-around px-5 py-3 text-white w-[350px] h-[235px] bg-gray-400 rounded-3xl bg-gradient-to-bl from-[${gradientColors[0]}] to-[${gradientColors[1]}] relative`}>
+        <div className={`shadow-xl flex flex-col justify-around px-5 py-3 text-white w-[350px] h-[235px] bg-gray-400 rounded-3xl bg-gradient-to-br from-[${gradientColors[0]}] to-[${gradientColors[1]}] relative`}>
             {/* 카드 하단 블러 */}
             <div className="absolute bottom-0 left-0 right-0 h-[70px] bg-white/20 rounded-b-xl z-0" />
             {/* 카드 상단 */}
