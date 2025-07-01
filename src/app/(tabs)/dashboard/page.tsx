@@ -68,14 +68,12 @@ export default function Page() {
     };
 
     return (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-12">
             <div className="flex justify-center gap-4">
                 <div className="flex flex-col w-[730px] gap-4">
-                    <div className="flex justify-between w-full">
-                        <p>My Cards</p>
-                        <span>
-                            <Link href="/dashboard/cards">모두 보기</Link>
-                        </span>
+                    <div className="flex justify-between items-end">
+                        <p className="font-semibold text-2xl">My Cards</p>
+                        <Link href="/dashboard/cards">모두 보기</Link>
                     </div>
                     <div className="flex gap-6">
                         <Card gradientColors={["#FFC21F", "#F68701"]}
@@ -114,12 +112,10 @@ export default function Page() {
                 <div className="flex flex-col justify-between gap-4">
                     <div className="w-[730px] h-[460px]">
                         <div className="flex justify-between w-full">
-                            <p>소비 그래프</p>
-                            <span>
-                                <Link href="/dashboard/cards/graph">모두 보기</Link>
-                            </span>
+                            <p className="font-semibold text-2xl">소비 그래프</p>
+                            <Link href="/dashboard/cards/graph">모두 보기</Link>
                         </div>
-                        <div className="h-[460px] w-full">
+                        <div className="h-[460px] w-full p-5 border-2 border-[#C1E7F0] rounded-xl">
                             <Line
                                 options={{
                                     scales: {
@@ -128,7 +124,12 @@ export default function Page() {
                                             title: {
                                                 display: false,
                                                 text: '일',
+
                                             },
+                                            grid: {
+                                                drawOnChartArea: false,
+                                                drawTicks: false,
+                                            }
                                         },
                                         y: {
                                             title: {
@@ -136,8 +137,15 @@ export default function Page() {
                                                 text: '값',
                                             },
                                             ticks: {
-                                                stepSize: 10, // y축 간격 설정
+                                                stepSize: 50, // y축 간격 설정
                                             },
+                                            border: {
+                                                display: false,
+                                            },
+                                            grid: {
+                                                color: "#C1E7F0"
+                                            },
+                                            min: 1
                                         },
                                     },
                                     plugins: {
@@ -158,13 +166,14 @@ export default function Page() {
                                         {
                                             label: '데이터',
                                             data: [
-                                                1, 50, 5, 17, 150, 25, 200,
+                                                1, 50, 100, 17, 150, 25, 200,
                                             ],
-                                            borderColor: 'black',
-                                            borderWidth: 2,
+                                            borderColor: '#7CBBDE',
+                                            borderWidth: 3,
                                             fill: false,
-                                            tension: 0.3, // 선을 부드럽게 만드는 옵션
+                                            tension: 0.4, // 선을 부드럽게 만드는 옵션
                                             pointRadius: 0, // 데이터 포인트 원 숨김
+                                            cubicInterpolationMode: "monotone"
                                         },
                                     ]
                                 }}

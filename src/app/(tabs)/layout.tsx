@@ -15,7 +15,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className={`max-h-[1625px] justify-center flex gap-16`}>
+        <div className={`max-h-[1625px] justify-center flex gap-16 p-5`}>
             <Sidebar />
             {children}
         </div>
