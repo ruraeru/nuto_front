@@ -12,6 +12,8 @@ import {
     LineElement
 } from "chart.js";
 import Link from "next/link";
+import Image from "next/image";
+import Card from "@/components/dashboard/Card";
 
 ChartJS.register(
     ArcElement,
@@ -75,9 +77,24 @@ export default function Page() {
                             <Link href="/dashboard/cards">모두 보기</Link>
                         </span>
                     </div>
-                    <div className="flex gap-16">
-                        <div className="w-[350px] h-[235px] bg-gray-400" />
-                        <div className="w-[350px] h-[235px] bg-gray-400" />
+                    <div className="flex gap-6">
+                        <Card gradientColors={["#FFC21F", "#F68701"]}
+                            cardInfo={{
+                                usageAmount: "56,000",
+                                cardName: "토스뱅크",
+                                cardNumber: "4907-0000-0000...",
+                                cardExpirationPeriod: "12/22",
+                                cardBrand: "MATER",
+                            }} />
+
+                        <Card gradientColors={["#C1E7F0", "#7CBBDE"]}
+                            cardInfo={{
+                                usageAmount: "120,250",
+                                cardName: "하나은행",
+                                cardNumber: "4097-0000-0000...",
+                                cardExpirationPeriod: "12/22",
+                                cardBrand: "VISA",
+                            }} />
                     </div>
                 </div>
                 <div>

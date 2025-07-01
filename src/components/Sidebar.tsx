@@ -156,8 +156,8 @@ export default function Sidebar() {
             <div className={`mb-6 mt-2 mx-auto transition-all duration-300 ${isHovered ? '' : 'mb-4'
                 }`}>
                 <Image
-                    src="/nuto_Simbol.svg"
-                    alt='nuto_simbol'
+                    src="/nuto_symbol.svg"
+                    alt='nuto_symbol'
                     width={isHovered ? 60 : 40}
                     height={isHovered ? 60 : 40}
                     className="transition-all duration-300"
