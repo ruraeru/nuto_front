@@ -56,62 +56,73 @@ const TagInput: React.FC<TagInputProps> = ({
         }
     };
     return (
-        <div className="w-full max-w-md mx-auto bg-white">
-            <h2 className="text-lg font-medium mb-4 text-gray-800">카테고리</h2>
-
-            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-                <div className="flex flex-wrap gap-2">
-                    {tags.map((tag, index) => (
-                        <span
-                            key={index}
-                            className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-gray-300 rounded-full text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                        >
-                            {tag}
-                            <button
-                                onClick={() => handleRemoveTag(index)}
-                                className="text-gray-400 hover:text-gray-600 transition-colors"
-                                aria-label={`${tag} 태그 삭제`}
+        <div className="flex flex-col gap-2">
+            <div>
+                <h2 className="text-lg font-medium mb-4 text-gray-800">카테고리</h2>
+                <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                    <div className="flex flex-wrap gap-2">
+                        {tags.map((tag, index) => (
+                            <span
+                                key={index}
+                                className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-gray-300 rounded-full text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                             >
-                                <XMarkIcon />
-                            </button>
-                        </span>
-                    ))}
+                                {tag}
+                                <button
+                                    onClick={() => handleRemoveTag(index)}
+                                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                                    aria-label={`${tag} 태그 삭제`}
+                                >
+                                    <XMarkIcon />
+                                </button>
+                            </span>
+                        ))}
 
-                    {showInput ? (
-                        <div className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-blue-300 rounded-full">
-                            <input
-                                type="text"
-                                value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
-                                onKeyDown={handleKeyPress}
-                                onBlur={() => {
-                                    if (inputValue.trim()) {
-                                        handleAddTag();
-                                    } else {
-                                        setShowInput(false);
-                                    }
-                                }}
-                                className="text-sm bg-transparent outline-none min-w-0 w-16"
-                                placeholder="태그명"
-                                autoFocus
-                            />
-                        </div>
-                    ) : (
-                        <button
-                            onClick={() => setShowInput(true)}
-                            className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-dashed border-gray-300 rounded-full text-sm text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors"
-                        >
-                            <PlusIcon />
-                            태그 추가
-                        </button>
-                    )}
+                        {showInput ? (
+                            <div className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-blue-300 rounded-full">
+                                <input
+                                    type="text"
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    onKeyDown={handleKeyPress}
+                                    onBlur={() => {
+                                        if (inputValue.trim()) {
+                                            handleAddTag();
+                                        } else {
+                                            setShowInput(false);
+                                        }
+                                    }}
+                                    className="text-sm bg-transparent outline-none min-w-0 w-16"
+                                    placeholder="태그명"
+                                    autoFocus
+                                />
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => setShowInput(true)}
+                                className="inline-flex items-center gap-1 px-3 py-1 bg-white border border-dashed border-gray-300 rounded-full text-sm text-gray-500 hover:border-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                <PlusIcon />
+                                태그 추가
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+            <div className='flex items-center gap-4'>
+                <div className="flex items-center gap-2">
+                    <input type="radio" className="cursor-pointer size-8 appearance-none border rounded-lg checked:bg-[#7CBBDE] checked:border-none" name='type' />
+                    <label>수입</label>
+                </div>
+                <div className="flex items-center gap-2">
+                    <input type="radio" className="cursor-pointer size-8 appearance-none border rounded-lg checked:bg-[#7CBBDE] checked:border-none" name='type' />
+                    <label>지출</label>
                 </div>
             </div>
 
-            <div className="mt-4 text-xs text-gray-500">
+            {/* <div className="mt-4 text-xs text-gray-500">
                 • 태그를 클릭하여 삭제할 수 있습니다 <br />
                 • Enter 키로 태그를 추가하거나 ESC 키로 취소할 수 있습니다
-            </div>
+            </div> */}
         </div>
     );
 };
