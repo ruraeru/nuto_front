@@ -209,64 +209,57 @@ export default function Page() {
                     </div>
                     <div className="w-[730px]">
                         <div className="flex justify-between w-full">
-                            <p>한달 소비 내역</p>
-                            <span>
-                                <Link href="/dashboard/spendingHistory">모두 보기</Link>
-                            </span>
+                            <p className="font-semibold text-2xl">한달 소비 내역</p>
+                            <Link href="/dashboard/spendingHistory">모두 보기</Link>
                         </div>
-                        <div className="h-[463px] bg-gray-600 text-white">
+                        <div className="h-[463px] border-2 border-[#C1E7F0] rounded-2xl shadow-2xl p-3">
                             <table className="w-full">
-                                <caption className="text-left p-5 text-black font-bold">Top Selling Product</caption>
-                                <thead className="text-left">
-                                    <tr className="*:p-5">
-                                        <th>Product</th>
-                                        <th>Day</th>
-                                        <th>Price</th>
-                                        <th>Content</th>
+                                <caption className="text-left p-5 text-black font-semibold text-2xl border-b-2 border-[#C1E7F0]">2025.04 소비 내역</caption>
+                                <thead className="border-b-2 border-[#C1E7F0]">
+                                    <tr className="*:p-3">
+                                        <th>이름</th>
+                                        <th>금액</th>
+                                        <th>카드</th>
+                                        <th>날짜</th>
+                                        <th>카테고리</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr className="*:p-5">
+                                <tbody className="text-center font-medium *:border-b-1 *:border-[#C1E7F0] *:last:border-none ">
+                                    <tr className="*:px-5 *:py-7">
                                         <td>
-                                            <div className="flex items-center gap-4">
-                                                <div className="size-10 bg-white rounded-full" />
-                                                <div>
-                                                    <span className="text-sm">Nike v22</span>
-                                                    <p className="text-xs">Running Shoes</p>
-                                                </div>
-                                            </div>
+                                            버거킹
                                         </td>
-                                        <td>8000</td>
-                                        <td>$130</td>
-                                        <td>$9,500</td>
+                                        <td>10,000</td>
+                                        <td>신한은행</td>
+                                        <td>25.04.11</td>
+                                        <td>식비</td>
                                     </tr>
-                                    <tr className="*:p-5">
+                                    <tr className="*:px-5 *:py-7">
                                         <td>
-                                            <div className="flex items-center gap-4">
-                                                <div className="size-10 bg-white rounded-full" />
-                                                <div>
-                                                    <span className="text-sm">Nike v22</span>
-                                                    <p className="text-xs">Running Shoes</p>
-                                                </div>
-                                            </div>
+                                            버거킹
                                         </td>
-                                        <td>8000</td>
-                                        <td>$130</td>
-                                        <td>$9,500</td>
+                                        <td>10,000</td>
+                                        <td>신한은행</td>
+                                        <td>25.04.11</td>
+                                        <td>식비</td>
                                     </tr>
-                                    <tr className="*:p-5">
+                                    <tr className="*:px-5 *:py-7">
                                         <td>
-                                            <div className="flex items-center gap-4">
-                                                <div className="size-10 bg-white rounded-full" />
-                                                <div>
-                                                    <span className="text-sm">Nike v22</span>
-                                                    <p className="text-xs">Running Shoes</p>
-                                                </div>
-                                            </div>
+                                            버거킹
                                         </td>
-                                        <td>8000</td>
-                                        <td>$130</td>
-                                        <td>$9,500</td>
+                                        <td>10,000</td>
+                                        <td>신한은행</td>
+                                        <td>25.04.11</td>
+                                        <td>식비</td>
+                                    </tr>
+                                    <tr className="*:px-5 *:py-7">
+                                        <td>
+                                            버거킹
+                                        </td>
+                                        <td>10,000</td>
+                                        <td>신한은행</td>
+                                        <td>25.04.11</td>
+                                        <td>식비</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -276,19 +269,25 @@ export default function Page() {
 
                 <div className="flex flex-col justify-center gap-4">
                     <div className="flex flex-col justify-center gap-4">
-                        <div className="mb-4">
-                            <div className="mb-4">
-                                <span>이번 달 내 소비는?</span>
-                            </div>
-                            <div className="bg-gray-500 w-[270px] h-[235px]">
-
+                        <div className="mb-4 flex flex-col gap-4">
+                            <p className="font-semibold text-2xl">이번달 내 지출은?</p>
+                            <div className=" bg-gradient-to-tr from-[#7CBBDE] to-[#C1E7F0] w-[270px] h-[235px] rounded-2xl shadow-xl
+                            flex flex-col justify-center items-center text-white
+                            ">
+                                <p>저번달 대비</p>
+                                <p className="font-semibold text-4xl py-3">100,000원</p>
+                                <p>더 지출하였습니다</p>
                             </div>
                         </div>
-                        <div>
-                            <div className="mb-4">
-                                <span>지금 내 소비는?</span>
+                        <div className="mb-4 flex flex-col gap-4">
+                            <p className="font-semibold text-2xl">이번달 내 수익은?</p>
+                            <div className=" bg-gradient-to-tr from-[#7CBBDE] to-[#C1E7F0] w-[270px] h-[235px] rounded-2xl shadow-xl
+                            flex flex-col justify-center items-center text-white
+                            ">
+                                <p>저번달 대비</p>
+                                <p className="font-semibold text-4xl py-3">50,000원</p>
+                                <p>줄었습니다</p>
                             </div>
-                            <div className="bg-gray-500 w-[270px] h-[235px]" />
                         </div>
                     </div>
                     <div>
@@ -296,7 +295,7 @@ export default function Page() {
                             <div className="mb-4">
                                 <p className="font-semibold text-2xl">카테고리별 소비</p>
                             </div>
-                            <div className="bg-gray-100 w-[270px] h-[383px] p-5">
+                            <div className="border-2 border-[#C1E7F0] rounded-2xl w-[270px] h-[383px] p-5 shadow-xl">
                                 <DoughnutChart />
                             </div>
                         </div>

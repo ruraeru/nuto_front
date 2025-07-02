@@ -20,12 +20,9 @@ interface CardProps {
 }
 
 export default function Card({ gradientColors, cardInfo }: CardProps) {
-
     const cardBackgroundStyle = {
         background: `linear-gradient(to bottom right, ${gradientColors[0]}, ${gradientColors[1]})`
     }
-
-    console.log(gradientColors)
     return (
         <div style={cardBackgroundStyle} className={`shadow-xl flex flex-col justify-around px-5 py-3 text-white w-[350px] h-[235px] rounded-3xl relative`}>
             {/* 카드 하단 블러 */}
