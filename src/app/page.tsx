@@ -106,9 +106,9 @@ export default function Home() {
         </div>
 
         <div className="flex justify-between gap-6">
-          <Image src={"/financial_img.svg"} alt='나의 소비 패턴에 최적화된 신용카드를 찾아보세요' width={306} height={400} />
-          <Image src={"/financial_img2.svg"} alt='저축 및 적금 상품 이미지' width={306} height={400} />
-          <Image src={"/financial_img3.svg"} alt='투자 상품 추천 이미지' width={306} height={400} />
+          <Image src={"/financial_img.svg"} alt='나의 소비 패턴에 최적화된 신용카드를 찾아보세요' width={306} height={400} className='w-[306px] h-[400px]' />
+          <Image src={"/financial_img2.svg"} alt='저축 및 적금 상품 이미지' width={306} height={400} className='w-[306px] h-[400px]' />
+          <Image src={"/financial_img3.svg"} alt='투자 상품 추천 이미지' width={306} height={400} className='w-[306px] h-[400px]' />
         </div>
       </section>
     </main>

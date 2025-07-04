@@ -9,9 +9,9 @@ export default function Header() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
-            <div className="w-fit h-fit">
+            <div>
                 <Link href="/">
-                    <Image src="/nuto.svg" alt="nuto_logo" width={132} height={52} />
+                    <Image src="/nuto.svg" alt="nuto_logo" width={132} height={50} className="w-[132px] h-[50px]" />
                 </Link>
             </div>
             <Link href="/login" className="text-sm">Login</Link>
