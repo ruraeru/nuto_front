@@ -8,13 +8,20 @@ const MONTH_NAMES: { [key: number]: string } = {
 };
 const WEEKDAYS: string[] = ['일', '월', '화', '수', '목', '금', '토'];
 
+const events: Events = {
+    '2025-05-02': { description: ['교통비', '식비 지출'], amount: 90000 },
+    '2025-05-10': { description: ['월세 자동이체'], amount: 50000 },
+    '2025-05-31': { description: ['월세 자동이체'], amount: 500000 },
+    '2025-07-03': { description: ['월세 자동이체'], amount: 50000 },
+    '2025-07-04': { description: ['월세 자동이체'], amount: 60000 },
+    '2025-07-01': { description: ['월세 자동이체'], amount: 600000 },
+};
+
 // 날짜 상태를 나타내는 타입 (가독성 향상)
 enum DateStatus {
     Default,      // 기본 (이벤트 없음)
-
-    MinorEvent,   // 경미한 일정 (amount 0 이하)
-    MajorEvent,   // 중요 일정 (amount > 0)
-    Inactive      // 해당 월의 날짜 아님
+    MinorEvent,   // 적당한 소비 (amount <= 50000)
+    MajorEvent,   // 과소비 (amount > 50000)
 }
 
 // --- Types ---
@@ -58,10 +65,9 @@ const isCurrentDay = (day: number, currentMonthDate: Date): boolean => {
 };
 
 // --- Calendar Component ---
-
 const Calendar: React.FC<CalendarProps> = ({
     initialDate = new Date(),
-    events = {}, // 기본값 빈 객체
+    // events = {}, // 기본값 빈 객체
     onDateClick
 }) => {
     const [currentMonthDate, setCurrentMonthDate] = useState<Date>(initialDate);
@@ -83,44 +89,29 @@ const Calendar: React.FC<CalendarProps> = ({
 
     // 캘린더 데이터 생성 (useMemo로 currentMonthDate 변경 시에만 재생성)
     const calendarGridData = useMemo(() => {
-        console.log("Generating calendar data for:", currentMonthDate); // 디버깅용 로그
-        const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
         const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
-        const firstDayOfWeek = firstDayOfMonth.getDay(); // 0 (일) ~ 6 (토)
         const lastDateOfMonth = lastDayOfMonth.getDate();
 
         const grid: ({ day: number; status: DateStatus; dateString: string } | null)[][] = [];
-        let dayCounter = 1;
-        let weekIndex = 0;
+        let currentWeek: ({ day: number; status: DateStatus; dateString: string } | null)[] = [];
 
-        while (dayCounter <= lastDateOfMonth) {
-            const weekData: ({ day: number; status: DateStatus; dateString: string } | null)[] = [];
-            for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
-                if ((weekIndex === 0 && dayIndex < firstDayOfWeek) || dayCounter > lastDateOfMonth) {
-                    weekData.push(null);
-                } else {
-                    const dateString = formatDateString(currentYear, currentMonth, dayCounter);
-                    let status = DateStatus.Default;
-                    if (events[dateString]) {
-                        status = events[dateString].amount > 0 ? DateStatus.MajorEvent : DateStatus.MinorEvent;
-                    }
-                    weekData.push({ day: dayCounter, status, dateString });
-                    dayCounter++;
+        // 1일부터 마지막 날까지 순서대로 그리드에 채워 넣습니다.
+        for (let i = 1; i <= lastDateOfMonth; i++) {
+            const dateString = formatDateString(currentYear, currentMonth, i);
+            let status = DateStatus.Default;
+            if (events[dateString]) {
+                status = events[dateString].amount > 50000 ? DateStatus.MajorEvent : DateStatus.MinorEvent;
+            }
+            currentWeek.push({ day: i, status, dateString });
+
+            // 현재 주가 7일이 되거나, 마지막 날짜에 도달하면 새로운 주를 시작합니다.
+            if (currentWeek.length === 7 || i === lastDateOfMonth) {
+                // 마지막 주가 7일 미만일 때 null로 채웁니다.
+                while (currentWeek.length < 7) {
+                    currentWeek.push(null);
                 }
-            }
-            grid.push(weekData);
-            weekIndex++;
-            // 6주 이상 필요한 경우 방지 (일반적으론 최대 6주)
-            if (weekIndex > 5 && dayCounter <= lastDateOfMonth) {
-                console.warn("Calendar grid exceeds 6 weeks, potential layout issue.");
-                break;
-            }
-        }
-        // 마지막 주가 7일 미만일 때 null 채우기 (레이아웃 유지)
-        if (grid.length > 0) {
-            const lastWeek = grid[grid.length - 1];
-            while (lastWeek.length < 7) {
-                lastWeek.push(null);
+                grid.push(currentWeek);
+                currentWeek = []; // 다음 주를 위해 초기화
             }
         }
 
@@ -129,19 +120,18 @@ const Calendar: React.FC<CalendarProps> = ({
             grid.push(Array(7).fill(null));
         }
 
-
         return grid;
     }, [currentYear, currentMonth, events]); // events도 dependency 추가
 
 
     // 날짜 상태에 따른 스타일 클래스 반환
     const getDayStyleByStatus = useCallback((dayData: { day: number; status: DateStatus; dateString: string } | null, isSelected: boolean): string => {
-        if (dayData === null) return "invisible"; // 내용을 숨기지만 공간은 차지 (bg-gray-300 opacity-0 대신)
+        if (dayData === null) return "invisible"; // 내용을 숨기지만 공간은 차지
 
         const { day, status, dateString } = dayData;
         const isToday = isCurrentDay(day, currentMonthDate);
 
-        const baseClasses = "w-10 h-10 flex items-center justify-center rounded-md transition-colors duration-150 cursor-pointer relative";
+        const baseClasses = "w-[50px] h-[50px] flex items-center justify-center rounded-md transition-colors duration-150 cursor-pointer relative border border-[#7CBBDE]";
         let backgroundClass = "";
         let textClass = "";
         let ringClass = isToday ? "ring-2 ring-blue-500 ring-offset-1" : ""; // ring-offset 추가하여 배경과 구분
@@ -149,16 +139,16 @@ const Calendar: React.FC<CalendarProps> = ({
 
         switch (status) {
             case DateStatus.MinorEvent:
-                backgroundClass = "bg-gray-200 hover:bg-gray-300"; // 약간 밝게 조정
+                backgroundClass = "bg-[#C1E7F0]/40 hover:bg-[#C1E7F0]/30";
                 textClass = "text-gray-700";
                 break;
             case DateStatus.MajorEvent:
-                backgroundClass = "bg-gray-800 hover:bg-gray-700";
+                backgroundClass = "bg-[#C1E7F0] hover:bg-[#C1E7F0]/80";
                 textClass = "text-white";
                 break;
             case DateStatus.Default:
             default:
-                backgroundClass = "bg-white hover:bg-gray-100";
+                backgroundClass = "bg-white hover:bg-[#C1E7F0]/10";
                 textClass = "text-black";
                 break;
         }
@@ -170,15 +160,15 @@ const Calendar: React.FC<CalendarProps> = ({
     }, [currentMonthDate]); // currentMonthDate만 의존
 
 
-    // 이벤트 팝업 위치 계산 (개선된 로직 유지, Ref 사용 고려 가능성)
     // 이벤트 팝업 위치 계산 (클릭된 셀 바로 아래에 표시)
     const calculateAndSetPopupPosition = useCallback((weekIndex: number, dayIndex: number) => {
         const calendarGrid = document.querySelector('.calendar-grid');
         if (!calendarGrid) return;
 
-        const allCells = calendarGrid.querySelectorAll('[role="button"]'); // 클릭 가능한 모든 셀
-        const cellIndex = weekIndex * 7 + dayIndex - (new Date(currentYear, currentMonth, 1).getDay()); // 실제 데이터가 있는 셀의 인덱스 계산
-        const targetCell = allCells[cellIndex] as HTMLElement; // 계산된 인덱스로 타겟 셀 접근
+        // 모든 셀을 가져옵니다.
+        const allCells = calendarGrid.querySelectorAll('[role="button"]');
+        // 변경된 로직에 따라 셀 인덱스를 단순하게 계산합니다.
+        const targetCell = allCells[weekIndex * 7 + dayIndex] as HTMLElement;
 
         if (!targetCell) {
             console.error("Target date cell not found for positioning.");
@@ -194,18 +184,15 @@ const Calendar: React.FC<CalendarProps> = ({
         // --- Configuration ---
         const popupElement = document.querySelector('[role="tooltip"]') as HTMLElement | null;
         const popupWidth = popupElement?.offsetWidth || 128; // 실제 너비 또는 기본값 (w-32 = 128px)
-
-        // const popupHeight = popupElement?.offsetHeight || 80; // 실제 높이 또는 기본값
         const margin = 8; // 셀과 팝업 사이 간격
 
         // --- Initial Calculation (Below, Centered Horizontally relative to cell) ---
         const top = cellRect.bottom - containerRect.top + margin;
         const left = cellRect.left - containerRect.left + (cellRect.width / 2) - (popupWidth / 2);
 
-        console.log(top, left)
-
         setPopupPosition({ top: `${top}px`, left: `${left}px` });
-    }, [currentMonth, currentYear]); // currentMonth, currentYear 변경 시 셀 인덱스 계산에 영향
+    }, []); // currentMonth, currentYear는 더 이상 셀 인덱스 계산에 직접 영향을 주지 않으므로 제거
+
 
     // 날짜 선택 처리
     const handleDateClick = useCallback((dayData: { day: number; status: DateStatus; dateString: string } | null, weekIndex: number, dayIndex: number): void => {
@@ -229,7 +216,7 @@ const Calendar: React.FC<CalendarProps> = ({
                 calculateAndSetPopupPosition(weekIndex, dayIndex);
             }
         }
-    }, [currentYear, currentMonth, events, selectedDateInfo, calculateAndSetPopupPosition, onDateClick]);
+    }, [currentYear, currentMonth, selectedDateInfo, calculateAndSetPopupPosition, onDateClick]);
 
     // 이전 달 이동
     const goToPreviousMonth = useCallback((): void => {
@@ -243,17 +230,12 @@ const Calendar: React.FC<CalendarProps> = ({
         setSelectedDateInfo(null); // 월 변경 시 선택 해제
     }, []);
 
-    // 월 변경 시 선택된 날짜 및 이벤트 정보 초기화 (이제 이동 함수 내에서 처리)
-    // useEffect(() => {
-    //     setSelectedDateInfo(null);
-    // }, [currentMonthDate]);
-
     return (
         // calendar-container 클래스 추가하여 팝업 위치 계산 기준 설정
-        <div className="bg-gray-300 h-fit p-4 sm:p-6 rounded-lg shadow-lg max-w-sm mx-auto relative calendar-container border border-gray-200">
+        <div className="w-[588px] h-[530px] p-4 sm:p-6 rounded-lg shadow-lg mx-auto relative calendar-container border-2 border-[#C1E7F0] bg-white">
             {/* 헤더 */}
             <div className="flex justify-between items-center mb-4">
-                <button
+                {/* <button
                     onClick={goToPreviousMonth}
                     className="text-gray-600 hover:bg-gray-100 p-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                     aria-label="이전 달"
@@ -261,9 +243,12 @@ const Calendar: React.FC<CalendarProps> = ({
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
                     </svg>
-                </button>
-                <div className="text-lg sm:text-xl font-semibold text-gray-800"> {currentYear}년 {currentMonthName}</div>
-                <button
+                </button> */}
+                <div className="text-5xl font-bold pl-4">
+                    {/* {currentYear}년 */}
+                    {currentMonthName}
+                </div>
+                {/* <button
                     onClick={goToNextMonth}
                     className="text-gray-600 hover:bg-gray-100 p-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400"
                     aria-label="다음 달"
@@ -271,17 +256,17 @@ const Calendar: React.FC<CalendarProps> = ({
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                         <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                     </svg>
-                </button>
+                </button> */}
             </div>
 
             {/* 요일 표시 */}
-            <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
+            {/* <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
                 {WEEKDAYS.map((day) => (
                     <div key={day} className="text-center text-xs font-medium text-gray-500">
                         {day}
                     </div>
                 ))}
-            </div>
+            </div> */}
 
             {/* 캘린더 그리드 (Tailwind grid 사용, gap 조절) */}
             <div className="grid grid-cols-7 gap-1 sm:gap-2 calendar-grid">
@@ -289,29 +274,30 @@ const Calendar: React.FC<CalendarProps> = ({
                     // 각 주(week) 렌더링 최적화를 위해 React.Fragment 또는 div 사용 시 key 부여
                     <React.Fragment key={weekIndex}>
                         {week.map((dayData, dayIndex) => (
-                            <div
-                                key={dayData ? dayData.dateString : `empty-${weekIndex}-${dayIndex}`} // 고유 키 보장
-                                className={getDayStyleByStatus(dayData, selectedDateInfo?.dateString === dayData?.dateString)}
-                                onClick={() => handleDateClick(dayData, weekIndex, dayIndex)}
-                                // 접근성: 클릭 가능한 요소 명확화
-                                role={dayData ? "button" : undefined}
-                                aria-label={dayData ? `${currentMonthName} ${dayData.day}일 ${events[dayData.dateString] ? '이벤트 있음' : ''}` : undefined}
-                                tabIndex={dayData ? 0 : undefined}
-                                // 비활성 날짜 포커스 제외
-                                aria-disabled={!dayData}
-                            >
-                                {dayData && (
-                                    <>
-                                        <span>{dayData.day}</span>
-                                        {/* 이벤트 강조 시각화 (개선: 상태에 따라 다른 마커 표시 가능) */}
-                                        {dayData.status === DateStatus.MajorEvent && (
-                                            <div className="absolute bottom-1 right-1 bg-red-500 w-1.5 h-1.5 rounded-full"></div>
-                                        )}
-                                        {dayData.status === DateStatus.MinorEvent && (
-                                            <div className="absolute bottom-1 right-1 bg-gray-400 w-1.5 h-1.5 rounded-full"></div>
-                                        )}
-                                    </>
-                                )}
+                            <div key={dayData ? dayData.dateString : `empty-${weekIndex}-${dayIndex}`} className='flex flex-col items-center'>
+                                <span className='font-semibold text-lg'>{dayData?.day}</span>
+                                <div
+                                    className={getDayStyleByStatus(dayData, selectedDateInfo?.dateString === dayData?.dateString)}
+                                    onClick={() => handleDateClick(dayData, weekIndex, dayIndex)}
+                                    // 접근성: 클릭 가능한 요소 명확화
+                                    role={dayData ? "button" : undefined}
+                                    aria-label={dayData ? `${currentMonthName} ${dayData.day}일 ${events[dayData.dateString] ? '이벤트 있음' : ''}` : undefined}
+                                    tabIndex={dayData ? 0 : undefined}
+                                    // 비활성 날짜 포커스 제외
+                                    aria-disabled={!dayData}
+                                >
+                                    {dayData && (
+                                        <>
+                                            {/* 이벤트 강조 시각화 (개선: 상태에 따라 다른 마커 표시 가능)
+                                            {dayData.status === DateStatus.MajorEvent && (
+                                                <div className="absolute bottom-1 right-1 bg-red-500 w-1.5 h-1.5 rounded-full"></div>
+                                            )}
+                                            {dayData.status === DateStatus.MinorEvent && (
+                                                <div className="absolute bottom-1 right-1 bg-gray-400 w-1.5 h-1.5 rounded-full"></div>
+                                            )} */}
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         ))}
                     </React.Fragment>
@@ -319,24 +305,26 @@ const Calendar: React.FC<CalendarProps> = ({
             </div>
 
             {/* 이벤트 정보 팝업 */}
-            {selectedDateInfo && selectedEventInfo && (
-                <div
-                    className="bg-gray-800 text-white p-3 rounded-lg absolute z-10 shadow-lg text-xs w-32" // 너비 고정 또는 내용 기반 조정
-                    style={popupPosition}
-                // // 팝업 접근성 개선
-                // role="tooltip" // 또는 dialog
-                // aria-live="polite" // 내용 변경 시 알림
-                >
-                    {selectedEventInfo.description.map((item, index) => (
-                        <div key={index} className="truncate">{item}</div> // 내용 길 경우 잘림 처리
-                    ))}
-                    {selectedEventInfo.amount > 0 && (
-                        <div className="border-t border-gray-600 mt-1 pt-1 font-medium">
-                            {selectedEventInfo.amount.toLocaleString()} 원 {/* 단위 추가 */}
-                        </div>
-                    )}
-                </div>
-            )}
+            {
+                selectedDateInfo && selectedEventInfo && (
+                    <div
+                        className="bg-[#414141] text-white p-3 rounded-lg absolute z-10 shadow-lg text-xs w-32" // 너비 고정 또는 내용 기반 조정
+                        style={popupPosition}
+                    // // 팝업 접근성 개선
+                    // role="tooltip" // 또는 dialog
+                    // aria-live="polite" // 내용 변경 시 알림
+                    >
+                        {selectedEventInfo.description.map((item, index) => (
+                            <div key={index} className="truncate">{item}</div> // 내용 길 경우 잘림 처리
+                        ))}
+                        {selectedEventInfo.amount > 0 && (
+                            <div className="border-t border-gray-600 mt-1 pt-1 font-medium">
+                                {selectedEventInfo.amount.toLocaleString()}원 {/* 단위 추가 */}
+                            </div>
+                        )}
+                    </div>
+                )
+            }
         </div>
     );
 };
