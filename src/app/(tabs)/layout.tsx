@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
     return (
         //relative max-w-[1200px] mx-auto
-        <div className={`max-h-[1625px] justify-center flex gap-16 p-5s`}>
+        <div className={`max-h-[1625px] justify-center flex gap-16 p-5 overflow-hidden`}>
             <Sidebar />
             {children}
         </div>
