@@ -20,7 +20,7 @@ export default function Home() {
           <div className="lg:w-1/2">
             <div className="mb-8">
               <div className="size-[200px] mb-6 relative">
-                <Image src={"/nuto_Simbol.svg"} alt='nuto_simbol' width={200} height={200} />
+                <Image src={"/nuto_symbol.svg"} alt='nuto_symbol' width={200} height={200} />
               </div>
             </div>
             <h1 className="text-5xl font-bold text-gray-900 mb-4 leading-tight">
