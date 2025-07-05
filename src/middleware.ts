@@ -19,7 +19,6 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/signup", req.url));
     }
   }
-  console.log(session);
 }
 
 export const config = {

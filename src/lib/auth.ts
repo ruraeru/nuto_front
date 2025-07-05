@@ -1,32 +1,35 @@
-const API_URL = "http://127.0.0.1:8080";
-
 export async function sendEmailCode(email: string) {
-  console.log(email);
-  const res = await fetch(`${API_URL}/api/auth/send-email`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-    }),
-  }).then((res) => res.json());
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/auth/send-email`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+      }),
+    }
+  ).then((res) => res.json());
 
   console.log(res);
 }
 
 export async function verificationEmailCode(email: string, code: string) {
   console.log(email, code);
-  const res = await fetch(`${API_URL}/api/auth/verification`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      code,
-    }),
-  }).then((res) => res.json());
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/auth/verification`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        code,
+      }),
+    }
+  ).then((res) => res.json());
   return res;
 }
 
@@ -39,15 +42,18 @@ export interface SignUpProps {
 }
 
 export async function signUp(formData: SignUpProps) {
-  const res = await fetch(`${API_URL}/api/auth/signup`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      ...formData,
-    }),
-  }).then((res) => res.json());
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...formData,
+      }),
+    }
+  ).then((res) => res.json());
 
   return res;
 }
@@ -60,16 +66,19 @@ export async function AuthLogin({
   password: string;
 }) {
   try {
-    const response = await fetch(`${API_URL}/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-        password,
-      }),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          password,
+        }),
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -105,7 +114,7 @@ export async function AuthLogin({
 }
 
 export async function verificationToken(accessToken: string) {
-  const response = await fetch(`${API_URL}/api/auth/`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -114,7 +123,7 @@ export async function verificationToken(accessToken: string) {
   });
   if (response.ok) {
     const data = await response.text();
-    console.log(data);
-    // return await response.json();
+    console.log("verification", data);
+    return data;
   }
 }
