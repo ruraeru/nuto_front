@@ -14,7 +14,8 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import Card from "@/components/dashboard/Card";
-import DoughnutChart from "@/components/Chart/Doughnut";
+import DoughnutChart from "@/components/Chart/DoughnutChart";
+import LineChart from "@/components/Chart/LineChart";
 
 ChartJS.register(
     ArcElement,
@@ -143,68 +144,7 @@ export default function Page() {
                             <Link href="/dashboard/cards/graph">모두 보기</Link>
                         </div>
                         <div className="h-[460px] w-full p-5 border-2 border-[#C1E7F0] rounded-xl">
-                            <Line
-                                options={{
-                                    scales: {
-                                        x: {
-                                            type: 'category',
-                                            title: {
-                                                display: false,
-                                                text: '일',
-
-                                            },
-                                            grid: {
-                                                drawOnChartArea: false,
-                                                drawTicks: false,
-                                            }
-                                        },
-                                        y: {
-                                            title: {
-                                                display: false,
-                                                text: '값',
-                                            },
-                                            ticks: {
-                                                stepSize: 50, // y축 간격 설정
-                                            },
-                                            border: {
-                                                display: false,
-                                            },
-                                            grid: {
-                                                color: "#C1E7F0"
-                                            },
-                                            min: 1
-                                        },
-                                    },
-                                    plugins: {
-                                        legend: {
-                                            display: false, // 범례 숨김
-                                        },
-                                        tooltip: {
-                                            mode: 'index',
-                                            intersect: false,
-                                        },
-                                    },
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                }}
-                                data={{
-                                    labels: [1, 5, 10, 15, 20, 25, 30],
-                                    datasets: [
-                                        {
-                                            label: '데이터',
-                                            data: [
-                                                1, 50, 100, 17, 150, 25, 200,
-                                            ],
-                                            borderColor: '#7CBBDE',
-                                            borderWidth: 3,
-                                            fill: false,
-                                            tension: 0.4, // 선을 부드럽게 만드는 옵션
-                                            pointRadius: 0, // 데이터 포인트 원 숨김
-                                            cubicInterpolationMode: "monotone"
-                                        },
-                                    ]
-                                }}
-                            />
+                            <LineChart />
                         </div>
                     </div>
                     <div className="w-[730px]">

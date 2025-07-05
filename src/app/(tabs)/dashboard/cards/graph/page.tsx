@@ -1,28 +1,6 @@
 "use client"
 
-import { Line } from "react-chartjs-2";
-import {
-    Chart as ChartJS,
-    ArcElement,
-    Tooltip,
-    Legend,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement
-} from "chart.js";
-import Link from "next/link";
-
-ChartJS.register(
-    ArcElement,
-    Tooltip,
-    Legend,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement
-);
-
+import BarChart from "@/components/Chart/BarChart";
 
 export default function CardsGraph() {
     return (
@@ -36,68 +14,7 @@ export default function CardsGraph() {
             </div>
             <div className="flex flex-col items-center gap-4">
                 <div className="w-[1006px] h-[460px] p-5 border-2 border-[#C1E7F0] rounded-lg">
-                    <Line
-                        options={{
-                            scales: {
-                                x: {
-                                    type: 'category',
-                                    title: {
-                                        display: false,
-                                        text: '일',
-
-                                    },
-                                    grid: {
-                                        drawOnChartArea: false,
-                                        drawTicks: false,
-                                    }
-                                },
-                                y: {
-                                    title: {
-                                        display: false,
-                                        text: '값',
-                                    },
-                                    ticks: {
-                                        stepSize: 50, // y축 간격 설정
-                                    },
-                                    border: {
-                                        display: false,
-                                    },
-                                    grid: {
-                                        color: "#C1E7F0"
-                                    },
-                                    min: 1
-                                },
-                            },
-                            plugins: {
-                                legend: {
-                                    display: false, // 범례 숨김
-                                },
-                                tooltip: {
-                                    mode: 'index',
-                                    intersect: false,
-                                },
-                            },
-                            responsive: true,
-                            maintainAspectRatio: false,
-                        }}
-                        data={{
-                            labels: [1, 5, 10, 15, 20, 25, 30],
-                            datasets: [
-                                {
-                                    label: '데이터',
-                                    data: [
-                                        1, 50, 100, 17, 150, 25, 200,
-                                    ],
-                                    borderColor: '#7CBBDE',
-                                    borderWidth: 3,
-                                    fill: false,
-                                    tension: 0.4, // 선을 부드럽게 만드는 옵션
-                                    pointRadius: 0, // 데이터 포인트 원 숨김
-                                    cubicInterpolationMode: "monotone"
-                                },
-                            ]
-                        }}
-                    />
+                    <BarChart />
                 </div>
                 <div className="*:border-1 *:px-3 *:py-1 *:rounded-lg flex gap-4">
                     <select>
