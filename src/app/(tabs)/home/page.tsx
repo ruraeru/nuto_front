@@ -1,28 +1,29 @@
 "use client"
 
-import Calendar, { EventInfo, Events } from "@/components/Calendar";
+import Calendar from "@/components/Calendar";
+import useAuthStore from "@/lib/authStore";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Page() {
-    // const eventsData: Events = {
-    //     '2025-05-02': { description: ['교통비', '식비 지출'], amount: 90000 },
-    //     '2025-05-10': { description: ['월세 자동이체'], amount: 50000 },
-    //     '2025-05-31': { description: ['월세 자동이체'], amount: 500000 },
-    //     '2025-07-03': { description: ['월세 자동이체'], amount: 50000 },
-    //     '2025-07-04': { description: ['월세 자동이체'], amount: 60000 },
-    //     '2025-07-01': { description: ['월세 자동이체'], amount: 600000 },
-    // };
-    // const handleDateClick = (date: Date, event?: EventInfo) => {
-    //     console.log("Clicked Date:", date.toLocaleDateString());
-    //     if (event) {
-    //         console.log("Event:", event);
-    //     }
-    // };
+    const { userId } = useAuthStore();
+
+    useEffect(() => {
+        const cookieUserId = document.cookie.split('; ').find(row => row.startsWith('userId='))?.split('=')[1];
+        const cookieAccessToken = document.cookie.split('; ').find(row => row.startsWith('accessToken='))?.split('=')[1];
+        const cookieRefreshToken = document.cookie.split('; ').find(row => row.startsWith('refreshToken='))?.split('=')[1];
+
+        if (cookieUserId && cookieAccessToken && cookieRefreshToken) {
+            useAuthStore.getState().setTokens(cookieAccessToken, cookieRefreshToken);
+            useAuthStore.getState().setLoginState(true, cookieUserId);
+        }
+    }, []);
+
     return (
         <div className="h-screen flex justify-center">
             <div className="m-5 flex flex-col gap-5">
                 <div>
-                    <h1 className="font-extrabold text-4xl">이연우님의 소비 패턴</h1>
+                    <h1 className="font-extrabold text-4xl">{userId ? `${userId}님의 소비 패턴` : '로딩 중...'}</h1>
                 </div>
                 <div className="flex items-end gap-5">
                     <div className="flex flex-col gap-10">
@@ -73,11 +74,7 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="flex flex-col relative">
-                        <Calendar
-                        // events={eventsData}
-                        // onDateClick={handleDateClick}
-                        // initialDate={new Date()}
-                        />
+                        <Calendar />
                         <div className='w-[584px] h-[497px] absolute bg-gradient-to-t from-[#7CBBDE] to-[#C1E7F0] rounded-2xl rotate-8 -z-10 -top-2 left-9' />
                     </div>
                 </div>
