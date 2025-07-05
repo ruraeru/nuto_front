@@ -1,7 +1,12 @@
+"use client"
+
+import useAuthStore from "@/lib/authStore";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default function Header() {
+    const { userId, logout } = useAuthStore();
     return (
         <header className="h-20 flex justify-between items-center px-20 p-4 bg-[#56A6D6]">
             <button className="p-2">
@@ -14,7 +19,13 @@ export default function Header() {
                     <Image src="/nuto.svg" alt="nuto_logo" width={132} height={50} className="w-[132px] h-[50px]" />
                 </Link>
             </div>
-            <Link href="/login" className="text-sm">Login</Link>
+            {userId
+                ? <button className="text-sm" onClick={() => {
+                    logout();
+                    redirect("/login");
+                }}>Logout</button>
+                : <Link href="/login" className="text-sm">Login</Link>
+            }
         </header>
     )
 }

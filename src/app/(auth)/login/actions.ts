@@ -3,6 +3,7 @@
 import { AuthLogin, verificationToken } from "@/lib/auth";
 import getSession from "@/lib/session";
 import z from "zod";
+import { cookies } from "next/headers";
 
 const loginSchema = z.object({
   userId: z.string(),
@@ -38,6 +39,13 @@ export async function login(prevState: unknown, formData: FormData) {
     session.userId = result.data.userId;
 
     await session.save();
+
+    const cookieStore = await cookies();
+    // 쿠키에 저장
+    cookieStore.set("userId", result.data.userId, { path: "/" });
+    cookieStore.set("accessToken", authRes.accessToken, { path: "/" });
+    cookieStore.set("refreshToken", authRes.refreshToken, { path: "/" });
+
     console.log("로그인 및 세션 저장 성공 : ", session);
     return { success: true, message: "로그인 성공!" };
   } else {
