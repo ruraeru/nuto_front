@@ -61,16 +61,24 @@ async function processImage(file: File) {
 
 const prompt = `
       View an image and extract values in JSON format. 
+      Analyze if this is an income or expense transaction based on the receipt content.
+      - If it's a purchase receipt, salary slip, or payment: set transactionType to "지출"
+      - If it's a refund, cashback, or income receipt: set transactionType to "수입"
+      - Most receipts are typically expenses, but analyze the context carefully
+      
       if price 16,500 -> 16500
       Let me show you an example 
       { 
-       storeName: "Store Name",
-       address: "Address",
-       purchaseDate: "YYYY-MM-DD HH:MM:SS",
-       totalAmount: totalAmount,
-       category: ["식비", "쇼핑"],
-       recieptName: "",
-     }, 
+       "storeName": "Store Name",
+       "address": "Address",
+       "purchaseDate": "YYYY-MM-DD HH:MM:SS",
+       "totalAmount": totalAmount,
+       "category": ["식비", "쇼핑"],
+       "recieptName": "",
+       "transactionType": "수입 or 지출"
+     }
+     
+     Always return valid JSON format with all fields included.
 `;
 
 async function extractOutput(
@@ -78,11 +86,23 @@ async function extractOutput(
 ): Promise<RecieptType | null> {
   const res = result.response;
   const output = res.text();
-  const match = output.match(/`json\n([\s\S]*)\n`/);
+  const match = output.match(/```json\n([\s\S]*)\n```/);
 
   if (match && match[1]) {
-    console.log(JSON.parse(match[1]));
-    return JSON.parse(match[1]);
+    try {
+      const parsed = JSON.parse(match[1]);
+      console.log("Parsed receipt data:", parsed);
+
+      // 기본값 설정 (transactionType이 없는 경우)
+      if (!parsed.transactionType) {
+        parsed.transactionType = "지출";
+      }
+
+      return parsed;
+    } catch (error) {
+      console.error("JSON parsing error:", error);
+      return null;
+    }
   }
   return null;
 }
