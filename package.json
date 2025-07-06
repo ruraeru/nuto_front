@@ -11,6 +11,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@heroicons/react": "^2.2.0",
+    "@tanstack/react-query": "^5.81.5",
     "chart.js": "^4.4.9",
     "iron-session": "^8.0.4",
     "next": "15.3.1",
