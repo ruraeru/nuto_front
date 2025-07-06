@@ -13,9 +13,11 @@ export default function AddCards() {
 
     const handleCardInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setCardInfo({
-            ...cardInfo,
-            [name]: value
+        setCardInfo(prev => {
+            return {
+                ...prev,
+                [name]: value
+            }
         })
     }
 
