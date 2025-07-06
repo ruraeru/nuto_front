@@ -1,10 +1,11 @@
+import { parseExpiryDate } from "@/lib/utils";
 import Image from "next/image";
 
 
 interface CardProps {
     gradientColors: string[];
     cardInfo: {
-        usageAmount: string;
+        usageAmount: number;
         cardName: string;
         cardNumber: string;
         cardExpirationPeriod: string;
@@ -31,7 +32,7 @@ export default function Card({ gradientColors, cardInfo }: CardProps) {
             <div className="flex justify-between items-center z-10">
                 <div>
                     <p className="text-xs opacity-80">사용 금액</p>
-                    <p className="text-xl font-semibold">{cardInfo.usageAmount}</p>
+                    <p className="text-xl font-semibold">{cardInfo.usageAmount.toLocaleString("ko-KR")}</p>
                 </div>
                 <div>
                     <Image src="/card_chip.svg" alt="ic-chip" width={35} height={35} />
@@ -45,12 +46,12 @@ export default function Card({ gradientColors, cardInfo }: CardProps) {
                 </div>
                 <div>
                     <p className="text-xs opacity-80">VALID THRU</p>
-                    <p className="text-base font-semibold">{cardInfo.cardExpirationPeriod}</p>
+                    <p className="text-base font-semibold">{parseExpiryDate(cardInfo.cardExpirationPeriod)}</p>
                 </div>
             </div>
             {/* 카드 하단 */}
             <div className="flex justify-between items-end mt-4 z-10">
-                <p className="text-2xl font-semibold tracking-wider">{cardInfo.cardNumber}</p>
+                <p className="text-xl font-semibold tracking-wider">{cardInfo.cardNumber}</p>
                 <Image src="/master_card_symbol.svg" alt="master_card_symbol" width={44} height={30} />
             </div>
         </div>

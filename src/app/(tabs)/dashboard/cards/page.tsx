@@ -1,8 +1,16 @@
+"use client"
+
 import Card from "@/components/dashboard/Card";
+import { getCards, ICardInfo } from "@/lib/card";
 import { PlusIcon } from "@heroicons/react/24/solid";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 export default function Page() {
+    const { data, isLoading } = useQuery<ICardInfo[]>({
+        queryKey: ['cards'],
+        queryFn: async () => (await getCards()).data
+    });
     return (
         <div>
             <div className="flex flex-col gap-4 mb-4">
@@ -28,40 +36,20 @@ export default function Page() {
                     </div>
                     <div className="flex flex-col items-center gap-16">
                         <div className="flex flex-wrap gap-4 w-[716px]">
-                            <Card gradientColors={["#FFC21F", "#F68701"]}
-                                cardInfo={{
-                                    usageAmount: "56,000",
-                                    cardName: "토스뱅크",
-                                    cardNumber: "4907-0000-0000...",
-                                    cardExpirationPeriod: "12/22",
-                                    cardBrand: "MATER",
-                                }} />
-
-                            <Card gradientColors={["#C1E7F0", "#7CBBDE"]}
-                                cardInfo={{
-                                    usageAmount: "120,250",
-                                    cardName: "하나은행",
-                                    cardNumber: "4097-0000-0000...",
-                                    cardExpirationPeriod: "12/22",
-                                    cardBrand: "VISA",
-                                }} />
-                            <Card gradientColors={["#FFC21F", "#F68701"]}
-                                cardInfo={{
-                                    usageAmount: "56,000",
-                                    cardName: "토스뱅크",
-                                    cardNumber: "4907-0000-0000...",
-                                    cardExpirationPeriod: "12/22",
-                                    cardBrand: "MATER",
-                                }} />
-
-                            <Card gradientColors={["#C1E7F0", "#7CBBDE"]}
-                                cardInfo={{
-                                    usageAmount: "120,250",
-                                    cardName: "하나은행",
-                                    cardNumber: "4097-0000-0000...",
-                                    cardExpirationPeriod: "12/22",
-                                    cardBrand: "VISA",
-                                }} />
+                            {isLoading ? (
+                                <div>카드 내역 불러오는 중....</div>
+                            ) : (
+                                data?.map((card, idx) => (
+                                    <Card key={idx} gradientColors={idx % 2 == 1 ? ["#C1E7F0", "#7CBBDE"] : ["#FFC21F", "#F68701"]}
+                                        cardInfo={{
+                                            usageAmount: card.totalAmount,
+                                            cardName: card.cardType,
+                                            cardNumber: card.cardNumber,
+                                            cardExpirationPeriod: card.expiryDate,
+                                            cardBrand: "MATER",
+                                        }} />
+                                ))
+                            )}
                         </div>
                         <div>
                             &larr; 1 &rarr;
