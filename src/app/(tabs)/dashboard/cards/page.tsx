@@ -39,7 +39,7 @@ export default function Page() {
                             {isLoading ? (
                                 <div>카드 내역 불러오는 중....</div>
                             ) : (
-                                data?.map((card, idx) => (
+                                data && data.map((card, idx) => (
                                     <Card key={idx} gradientColors={idx % 2 == 1 ? ["#C1E7F0", "#7CBBDE"] : ["#FFC21F", "#F68701"]}
                                         cardInfo={{
                                             usageAmount: card.totalAmount,
