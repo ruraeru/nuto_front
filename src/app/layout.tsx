@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${pretendard.variable} antialiased max-h-[1625px] relative flex flex-col gap-4`}
+        className={`${pretendard.variable} antialiased relative flex flex-col gap-4`}
       >
         <Header />
         {children}

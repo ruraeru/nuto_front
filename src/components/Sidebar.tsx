@@ -149,8 +149,7 @@ export default function Sidebar() {
     return (
         <div
             //xl:left-100 z-200 lg:left-10 fixed
-            className={`bg-white border-[#7CBBDE] border-1 rounded-lg p-4 flex flex-col transition-all duration-300 ease-in-out ${isHovered ? 'w-[218px]' : 'w-[70px]'
-                } h-fit min-h-[664px]`}
+            className={`bg-white h-screen border-[#7CBBDE] border-1 rounded-lg p-4 flex flex-col transition-all duration-300 ease-in-out ${isHovered ? 'w-[218px]' : 'w-[70px]'}`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
