@@ -9,6 +9,9 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import { useQuery } from '@tanstack/react-query';
+import { getConsumeByGraph } from '@/api/dashboard';
+import LoadingSpinner from './LoadingSpinner';
 
 // Chart.js 컴포넌트 등록
 ChartJS.register(
@@ -22,14 +25,17 @@ ChartJS.register(
 );
 
 const LineChart = () => {
+    const { data: chartData, isLoading } = useQuery({
+        queryKey: ['consume-graph'],
+        queryFn: getConsumeByGraph
+    });
+
     const data = {
-        labels: [1, 5, 10, 15, 20, 25, 30],
+        labels: chartData?.labels,
         datasets: [
             {
-                label: '데이터',
-                data: [
-                    1, 50, 100, 17, 150, 25, 200,
-                ],
+                label: "",
+                data: chartData?.data,
                 borderColor: '#7CBBDE',
                 borderWidth: 3,
                 fill: false,
@@ -82,6 +88,10 @@ const LineChart = () => {
         responsive: true,
         maintainAspectRatio: false,
     };
+
+    if (isLoading) {
+        return <LoadingSpinner />
+    }
 
     return <Line data={data} options={options} />;
 };

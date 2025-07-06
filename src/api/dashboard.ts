@@ -55,3 +55,37 @@ export async function getConsumeByCategory(): Promise<IConsumeByCategory> {
   const json = await response.json();
   return json.data;
 }
+
+interface IConsumeYear {
+  labels: string[];
+  data: number[];
+}
+
+export async function getConsumeYear(): Promise<IConsumeYear> {
+  const session = await getSession();
+  const response = await fetch(`${API_URL}/api/dashboard/year`, {
+    headers: {
+      Authorization: "Bearer " + session.accessToken,
+    },
+  });
+
+  const json = await response.json();
+  return json.data;
+}
+
+interface IConsumeByGraph {
+  labels: string[];
+  data: number[];
+}
+
+export async function getConsumeByGraph(): Promise<IConsumeByGraph> {
+  const session = await getSession();
+  const response = await fetch(`${API_URL}/api/dashboard/consume/graph`, {
+    headers: {
+      Authorization: "Bearer " + session.accessToken,
+    },
+  });
+
+  const json = await response.json();
+  return json.data;
+}

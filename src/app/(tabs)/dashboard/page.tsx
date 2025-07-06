@@ -8,6 +8,8 @@ import { getCards, ICardInfo } from "@/lib/card";
 import { useQuery } from "@tanstack/react-query";
 import PieChart from "@/components/Chart/PieChart";
 import { getConsumeMonth, getIncomeMonth } from "@/api/dashboard";
+import LoadingSpinner from "@/components/Chart/LoadingSpinner";
+import React from "react";
 
 export default function Page() {
     const { data, isLoading } = useQuery<ICardInfo[]>({
@@ -33,7 +35,7 @@ export default function Page() {
                     </div>
 
                     {isLoading ? (
-                        <h1>Loading...</h1>
+                        <LoadingSpinner text="카드 데이터 불러오는 중" />
                     ) : (
                         data && (
                             <div className="flex gap-6">
@@ -142,17 +144,17 @@ export default function Page() {
                     <div className="flex flex-col justify-center gap-4">
                         <div className="mb-4 flex flex-col gap-4">
                             <p className="font-semibold text-2xl">이번달 내 지출은?</p>
-                            <div className="bg-gradient-to-tr from-[#7CBBDE] to-[#C1E7F0] w-[270px] h-[235px] rounded-2xl shadow-xl
-                            flex flex-col justify-center items-center text-white
-                            ">
-                                <p>저번달 대비</p>
-                                <p className="font-semibold text-4xl py-3">
-                                    {consumeMonth && (
-                                        consumeMonth?.thisMonthExpense - consumeMonth?.lastMonthExpense
-                                    ).toLocaleString("ko-KR")
-                                    }원
-                                </p>
-                                <p>더 지출하였습니다</p>
+                            <div className="bg-gradient-to-tr from-[#7CBBDE] to-[#C1E7F0] w-[270px] h-[235px] rounded-2xl shadow-xl flex flex-col justify-center items-center text-white">
+                                {consumeMonth ? (
+                                    <React.Fragment>
+                                        <p>저번달 대비</p>
+                                        <p className="font-semibold text-4xl py-3">
+                                            {(consumeMonth.thisMonthExpense - consumeMonth.lastMonthExpense
+                                            ).toLocaleString("ko-KR")}원
+                                        </p>
+                                        <p>더 지출하였습니다</p>
+                                    </React.Fragment>
+                                ) : <LoadingSpinner text="데이터 불러오는 중" />}
                             </div>
                         </div>
                         <div className="mb-4 flex flex-col gap-4">
@@ -160,14 +162,18 @@ export default function Page() {
                             <div className=" bg-gradient-to-tr from-[#7CBBDE] to-[#C1E7F0] w-[270px] h-[235px] rounded-2xl shadow-xl
                             flex flex-col justify-center items-center text-white
                             ">
-                                <p>저번달 대비</p>
-                                <p className="font-semibold text-4xl py-3">
-                                    {incomeMonth && (
-                                        incomeMonth?.thisMonthExpense - incomeMonth?.lastMonthExpense
-                                    ).toLocaleString("ko-KR")
-                                    }원
-                                </p>
-                                <p>증가했습니다</p>
+                                {incomeMonth ? (
+                                    <React.Fragment>
+                                        <p>저번달 대비</p>
+                                        <p className="font-semibold text-4xl py-3">
+                                            {(
+                                                incomeMonth.thisMonthExpense - incomeMonth.lastMonthExpense
+                                            ).toLocaleString("ko-KR")
+                                            }원
+                                        </p>
+                                        <p>증가했습니다</p>
+                                    </React.Fragment>
+                                ) : <LoadingSpinner text="데이터 불러오는 중" />}
                             </div>
                         </div>
                     </div>

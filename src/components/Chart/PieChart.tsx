@@ -1,13 +1,21 @@
+import { getConsumeYear } from "@/api/dashboard";
+import { useQuery } from "@tanstack/react-query";
 import { Pie } from "react-chartjs-2";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function PieChart() {
+    const { data: chartData, isLoading } = useQuery({
+        queryKey: ["consume-year"],
+        queryFn: getConsumeYear
+    });
+
     const data = {
         // 이미지에 맞춰 레이블을 "1월", "2월", "3월", "4월"로 변경
-        labels: ["1월", "2월", "3월", "4월"],
+        labels: chartData?.labels,
         datasets: [
             {
                 // 이미지의 시각적 비율에 맞춰 데이터 값 조정 (총합 100)
-                data: [25, 15, 30, 30],
+                data: chartData?.data,
                 backgroundColor: [ // 이미지에 맞춰 배경 색상 변경
                     '#FFDAB9', // 1월 (밝은 살구색)
                     '#FCE4A7', // 2월 (아주 밝은 오렌지/노란색)
@@ -17,9 +25,6 @@ export default function PieChart() {
                 // 조각 사이의 간격을 만들기 위해 테두리 색상을 흰색으로 설정
                 borderColor: [
                     '#FFFFFF',
-                    '#FFFFFF',
-                    '#FFFFFF',
-                    '#FFFFFF'
                 ],
                 borderWidth: 2, // 조각 사이의 간격 두께 설정 (이미지와 유사하게)
                 hoverOffset: 10, // 마우스 호버 시 분리되는 효과
@@ -67,6 +72,10 @@ export default function PieChart() {
         responsive: true, // 차트 크기를 부모 컨테이너에 맞게 조절
         maintainAspectRatio: false, // 반응형일 때 가로세로 비율 유지 안 함 (높이 조절 가능)
     };
+
+    if (isLoading) {
+        return <LoadingSpinner />
+    }
 
     return (
         <Pie
