@@ -1,5 +1,6 @@
 import Card from "@/components/dashboard/Card";
 import { PlusIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 
 export default function Page() {
     return (
@@ -15,11 +16,13 @@ export default function Page() {
                 <div className="flex gap-4">
                     <div className="w-[202px] flex flex-col gap-4">
                         <div className="w-full flex flex-col gap-4">
-                            <div className="size-[204px] border-1 border-[#D1D1D1] shadow-xl rounded-4xl">
-                                <PlusIcon color="#D1D1D1" width={30} className="mx-auto h-full" />
-                            </div>
+                            <Link href="cards/add">
+                                <div className="size-[204px] border-1 border-[#D1D1D1] shadow-xl rounded-4xl">
+                                    <PlusIcon color="#D1D1D1" width={30} className="mx-auto h-full" />
+                                </div>
+                            </Link>
                             <div className="w-full p-3 text-center text-white bg-[#56A6D6] rounded-4xl">
-                                수정하기
+                                삭제하기
                             </div>
                         </div>
                     </div>
