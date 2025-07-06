@@ -9,8 +9,8 @@ import { useQuery } from "@tanstack/react-query";
 import PieChart from "@/components/Chart/PieChart";
 
 export default function Page() {
-    const { data: test, isLoading } = useQuery<ICardInfo[]>({
-        queryKey: ['test'],
+    const { data, isLoading } = useQuery<ICardInfo[]>({
+        queryKey: ['cards'],
         queryFn: async () => (await getCards()).data
     });
 
@@ -26,23 +26,23 @@ export default function Page() {
                     {isLoading ? (
                         <h1>Loading...</h1>
                     ) : (
-                        test && (
+                        data && (
                             <div className="flex gap-6">
                                 <Card gradientColors={["#FFC21F", "#F68701"]}
                                     cardInfo={{
-                                        usageAmount: test[0].totalAmount,
-                                        cardName: test[0].cardType,
-                                        cardNumber: test[0].cardNumber,
-                                        cardExpirationPeriod: test[0].expiryDate,
+                                        usageAmount: data[0].totalAmount,
+                                        cardName: data[0].cardType,
+                                        cardNumber: data[0].cardNumber,
+                                        cardExpirationPeriod: data[0].expiryDate,
                                         cardBrand: "MATER",
                                     }} />
 
                                 <Card gradientColors={["#C1E7F0", "#7CBBDE"]}
                                     cardInfo={{
-                                        usageAmount: test[1].totalAmount,
-                                        cardName: test[1].cardType,
-                                        cardNumber: test[1].cardNumber,
-                                        cardExpirationPeriod: test[1].expiryDate,
+                                        usageAmount: data[1].totalAmount,
+                                        cardName: data[1].cardType,
+                                        cardNumber: data[1].cardNumber,
+                                        cardExpirationPeriod: data[1].expiryDate,
                                         cardBrand: "VISA",
                                     }} />
                             </div>
