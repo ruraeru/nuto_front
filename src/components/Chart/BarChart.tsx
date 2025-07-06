@@ -1,3 +1,5 @@
+"use clinet"
+
 import { Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -8,7 +10,8 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-
+import { useQuery } from '@tanstack/react-query';
+import { getCardsConsumeHistory } from '@/lib/fetchChartData';
 
 ChartJS.register(
     CategoryScale,
@@ -21,18 +24,16 @@ ChartJS.register(
 
 
 const BarChart = () => {
+    const { data: cards, isLoading } = useQuery({
+        queryKey: ['cards'],
+        queryFn: getCardsConsumeHistory
+    });
+
     const data = {
-        labels: Array(31).fill(1).map((i, idx) => i + idx),
+        labels: cards?.labels,
         datasets: [
             {
-                label: '데이터',
-                data: [
-                    15000, 23000, 5000, 30000, 12000, 8000, 45000,
-                    18000, 27000, 6000, 35000, 14000, 9000, 50000,
-                    20000, 22000, 7000, 28000, 11000, 10000, 40000,
-                    16000, 25000, 4000, 32000, 13000, 7000, 48000,
-                    19000, 21000, 9500
-                ],
+                data: cards?.data,
                 backgroundColor: '#7CBBDE', // 막대 색상
             },
         ],
@@ -95,8 +96,15 @@ const BarChart = () => {
         maintainAspectRatio: false,
     };
 
+    if (isLoading) {
+        return <div>차트 데이터 불러오는 중....</div>
+    }
 
-    return <Bar data={data} options={options} />;
+    return (
+        <>
+            <Bar data={data} options={options} />
+        </>
+    )
 };
 
 
