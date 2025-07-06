@@ -7,11 +7,20 @@ import LineChart from "@/components/Chart/LineChart";
 import { getCards, ICardInfo } from "@/lib/card";
 import { useQuery } from "@tanstack/react-query";
 import PieChart from "@/components/Chart/PieChart";
+import { getConsumeMonth, getIncomeMonth } from "@/api/dashboard";
 
 export default function Page() {
     const { data, isLoading } = useQuery<ICardInfo[]>({
         queryKey: ['cards'],
         queryFn: async () => (await getCards()).data
+    });
+    const { data: consumeMonth } = useQuery({
+        queryKey: ['consume-month'],
+        queryFn: getConsumeMonth
+    });
+    const { data: incomeMonth } = useQuery({
+        queryKey: ['income-month'],
+        queryFn: getIncomeMonth
     });
 
     return (
@@ -137,7 +146,12 @@ export default function Page() {
                             flex flex-col justify-center items-center text-white
                             ">
                                 <p>저번달 대비</p>
-                                <p className="font-semibold text-4xl py-3">100,000원</p>
+                                <p className="font-semibold text-4xl py-3">
+                                    {consumeMonth && (
+                                        consumeMonth?.thisMonthExpense - consumeMonth?.lastMonthExpense
+                                    ).toLocaleString("ko-KR")
+                                    }원
+                                </p>
                                 <p>더 지출하였습니다</p>
                             </div>
                         </div>
@@ -147,8 +161,13 @@ export default function Page() {
                             flex flex-col justify-center items-center text-white
                             ">
                                 <p>저번달 대비</p>
-                                <p className="font-semibold text-4xl py-3">50,000원</p>
-                                <p>줄었습니다</p>
+                                <p className="font-semibold text-4xl py-3">
+                                    {incomeMonth && (
+                                        incomeMonth?.thisMonthExpense - incomeMonth?.lastMonthExpense
+                                    ).toLocaleString("ko-KR")
+                                    }원
+                                </p>
+                                <p>증가했습니다</p>
                             </div>
                         </div>
                     </div>

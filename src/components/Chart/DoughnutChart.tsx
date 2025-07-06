@@ -1,3 +1,5 @@
+"use client"
+
 import { Doughnut } from "react-chartjs-2";
 import {
     Chart as ChartJS,
@@ -9,6 +11,9 @@ import {
     PointElement,
     LineElement
 } from "chart.js";
+import { useQuery } from "@tanstack/react-query";
+import { getConsumeByCategory } from "@/api/dashboard";
+import LoadingSpinner from "./LoadingSpinner";
 
 // Chart.js 컴포넌트 및 플러그인 등록
 ChartJS.register(
@@ -22,19 +27,24 @@ ChartJS.register(
 );
 
 export default function DoughnutChart() {
+    const { data: chartData, isLoading } = useQuery({
+        queryKey: ["consume-category"],
+        queryFn: getConsumeByCategory
+    });
+
     // 도넛 차트 데이터 정의
     const data = {
         // 이미지에 맞춰 레이블 변경
-        labels: ["식비", "취미생활", "교통", "기타"],
+        labels: chartData?.labels,
         datasets: [
             {
                 // 이미지에 맞춰 데이터 값 변경 (총합 100)
-                data: [43, 27, 16, 33], // 이미지 비율에 맞춰 데이터 조정
+                data: chartData?.data, // 이미지 비율에 맞춰 데이터 조정
                 backgroundColor: [ // 이미지에 맞춰 배경 색상 변경
-                    '#FF8C00', // 식비 (짙은 오렌지색)
-                    '#FFDAB9', // 취미생활 (밝은 살구색)
-                    '#FFA500', // 교통 (주황색)
-                    '#FCE4A7'  // 기타 (아주 밝은 오렌지/노란색)
+                    '#FFC21F', // 식비 (짙은 오렌지색)
+                    '#ffc31f81', // 취미생활 (밝은 살구색)
+                    '#F68701', // 교통 (주황색)
+                    '#f6880176'  // 기타 (아주 밝은 오렌지/노란색)
                 ],
                 borderColor: [ // 조각 사이의 간격을 만들기 위해 테두리 색상을 흰색으로 설정
                     '#FFFFFF',
@@ -75,7 +85,7 @@ export default function DoughnutChart() {
             // 중앙 텍스트 플러그인 옵션을 여기에 정의합니다.
             centerText: {
                 display: true,
-                text: '360,000' // 이미지의 중앙 텍스트
+                text: chartData?.totalMount.toLocaleString("ko-KR") // 이미지의 중앙 텍스트
             }
         },
         responsive: true,
@@ -83,6 +93,9 @@ export default function DoughnutChart() {
         cutout: '80%', // 도넛 차트의 중앙 구멍 크기 (이미지와 유사하게)
     };
 
+    if (isLoading) {
+        return <LoadingSpinner />
+    }
     return (
         <div style={{ width: "100%", maxWidth: "400px", margin: "0 auto", textAlign: "center" }}>
             {/* Doughnut 컴포넌트를 사용하여 차트 렌더링 */}
@@ -119,19 +132,21 @@ export default function DoughnutChart() {
             </div>
             {/* 이미지 하단의 라벨 목록 */}
             <div className="mt-8 text-left w-full">
-                {data.labels.map((label, index) => (
-                    <div key={index} className="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0">
-                        <div className="flex items-center">
-                            {/* 색상 원 */}
-                            <span
-                                className="inline-block w-3 h-3 rounded-full mr-2"
-                                style={{ backgroundColor: data.datasets[0].backgroundColor[index] }}
-                            ></span>
-                            <span className="text-gray-700 text-base">{label}</span>
+                {chartData && (
+                    chartData.labels.map((label, index) => (
+                        <div key={index} className="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0">
+                            <div className="flex items-center">
+                                {/* 색상 원 */}
+                                <span
+                                    className="inline-block w-3 h-3 rounded-full mr-2"
+                                    style={{ backgroundColor: data.datasets[0].backgroundColor[index] }}
+                                ></span>
+                                <span className="text-gray-700 text-base">{label}</span>
+                            </div>
+                            <span className="text-gray-900 font-medium text-base">{chartData.data[index]}%</span>
                         </div>
-                        <span className="text-gray-900 font-medium text-base">{data.datasets[0].data[index]}%</span>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
         </div>
     );
