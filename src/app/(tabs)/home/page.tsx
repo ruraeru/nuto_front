@@ -1,29 +1,15 @@
-"use client"
-
 import Calendar from "@/components/Calendar";
-import useAuthStore from "@/lib/authStore";
+import getSession from "@/lib/session";
 import Link from "next/link";
-import { useEffect } from "react";
 
-export default function Page() {
-    const { userId } = useAuthStore();
-
-    useEffect(() => {
-        const cookieUserId = document.cookie.split('; ').find(row => row.startsWith('userId='))?.split('=')[1];
-        const cookieAccessToken = document.cookie.split('; ').find(row => row.startsWith('accessToken='))?.split('=')[1];
-        const cookieRefreshToken = document.cookie.split('; ').find(row => row.startsWith('refreshToken='))?.split('=')[1];
-
-        if (cookieUserId && cookieAccessToken && cookieRefreshToken) {
-            useAuthStore.getState().setTokens(cookieAccessToken, cookieRefreshToken);
-            useAuthStore.getState().setLoginState(true, cookieUserId);
-        }
-    }, []);
+export default async function Page() {
+    const session = await getSession();
 
     return (
         <div className="h-screen flex justify-center">
             <div className="m-5 flex flex-col gap-5">
                 <div>
-                    <h1 className="font-extrabold text-4xl">{userId ? `${userId}님의 소비 패턴` : '로딩 중...'}</h1>
+                    <h1 className="font-extrabold text-4xl">{session.userId ? `${session.userId}님의 소비 패턴` : '로딩 중...'}</h1>
                 </div>
                 <div className="flex items-end gap-5">
                     <div className="flex flex-col gap-10">
