@@ -1,6 +1,3 @@
-// "use client"
-
-import useAuthStore from "@/lib/authStore";
 import getSession from "@/lib/session";
 import Image from "next/image";
 import Link from "next/link";
