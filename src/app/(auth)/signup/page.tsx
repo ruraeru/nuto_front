@@ -2,7 +2,7 @@
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { sendEmailCode, signUp, SignUpProps, verificationEmailCode } from "@/lib/auth";
+import { sendEmailCode, signUp, SignUpProps, verificationEmailCode } from "@/api/auth";
 import Link from "next/link";
 import { useState } from "react";
 

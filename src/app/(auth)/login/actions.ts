@@ -1,6 +1,6 @@
 "use server";
 
-import { AuthLogin } from "@/lib/auth";
+import { AuthLogin } from "@/api/auth";
 import getSession from "@/lib/session";
 import z from "zod";
 
@@ -32,13 +32,12 @@ export async function login(prevState: unknown, formData: FormData) {
   if (authRes.success) {
     const session = await getSession();
 
-    session.accessToken = authRes.accessToken;
-    session.refreshToken = authRes.refreshToken;
+    session.accessToken = authRes.data!.accessToken;
+    session.refreshToken = authRes.data!.refreshToken;
     session.isLoggedIn = true;
     session.userId = result.data.userId;
 
     await session.save();
-    console.log("로그인 및 세션 저장 성공 : ", session);
     return { success: true, message: "로그인 성공!" };
   } else {
     console.error("AuthLogin 실패 : ", authRes.message);
