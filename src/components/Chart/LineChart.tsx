@@ -65,7 +65,7 @@ const LineChart = () => {
                     text: '값',
                 },
                 ticks: {
-                    stepSize: 50, // y축 간격 설정
+                    // stepSize: 50, // y축 간격 설정
                 },
                 border: {
                     display: false, // y축 메인 축 선 제거
