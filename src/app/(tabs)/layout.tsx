@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     title: "Nuto | 누구나 토닥이는 소비",
     description: "누구나 토닥이는 소비",
     icons: {
-        icon: "/nuto.png"
+        icon: "/nuto.svg"
     }
 };
 
