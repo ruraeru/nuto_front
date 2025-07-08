@@ -32,7 +32,7 @@ export default function Card({ gradientColors, cardInfo }: CardProps) {
             <div className="flex justify-between items-center z-10">
                 <div>
                     <p className="text-xs opacity-80">사용 금액</p>
-                    <p className="text-xl font-semibold">{cardInfo.usageAmount.toLocaleString("ko-KR")}</p>
+                    <p className="text-xl font-semibold">{cardInfo.usageAmount?.toLocaleString("ko-KR")}</p>
                 </div>
                 <div>
                     <Image src="/card_chip.svg" alt="ic-chip" width={35} height={35} />
@@ -46,7 +46,7 @@ export default function Card({ gradientColors, cardInfo }: CardProps) {
                 </div>
                 <div>
                     <p className="text-xs opacity-80">VALID THRU</p>
-                    <p className="text-base font-semibold">{parseExpiryDate(cardInfo.cardExpirationPeriod)}</p>
+                    {cardInfo.cardExpirationPeriod && <p className="text-base font-semibold">{parseExpiryDate(cardInfo.cardExpirationPeriod)}</p>}
                 </div>
             </div>
             {/* 카드 하단 */}

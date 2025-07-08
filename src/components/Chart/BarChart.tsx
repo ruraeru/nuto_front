@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import { useQuery } from '@tanstack/react-query';
 import { getCardsConsumeHistory } from '@/lib/fetchChartData';
+import LoadingSpinner from './LoadingSpinner';
 
 ChartJS.register(
     CategoryScale,
@@ -97,7 +98,7 @@ const BarChart = () => {
     };
 
     if (isLoading) {
-        return <div>차트 데이터 불러오는 중....</div>
+        return <LoadingSpinner />
     }
 
     return (

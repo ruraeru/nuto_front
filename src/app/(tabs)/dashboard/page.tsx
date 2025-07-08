@@ -13,7 +13,7 @@ import React from "react";
 import ExpenseCompareCard from "@/components/dashboard/ConsumptionCompareCard";
 
 export default function Page() {
-    const { data, isLoading } = useQuery<ICardInfo[]>({
+    const { data: cardInfo } = useQuery<ICardInfo[]>({
         queryKey: ['cards'],
         queryFn: async () => (await getCards()).data
     });
@@ -33,32 +33,27 @@ export default function Page() {
                         <p className="font-semibold text-2xl">My Cards</p>
                         <Link href="/dashboard/cards">모두 보기</Link>
                     </div>
+                    {cardInfo ? (
+                        <div className="flex gap-6">
+                            <Card gradientColors={["#FFC21F", "#F68701"]}
+                                cardInfo={{
+                                    usageAmount: cardInfo[0]?.totalAmount,
+                                    cardName: cardInfo[0]?.cardType,
+                                    cardNumber: cardInfo[0]?.cardNumber,
+                                    cardExpirationPeriod: cardInfo[0]?.expiryDate,
+                                    cardBrand: "MATER",
+                                }} />
 
-                    {isLoading ? (
-                        <LoadingSpinner text="카드 데이터 불러오는 중" />
-                    ) : (
-                        data && (
-                            <div className="flex gap-6">
-                                <Card gradientColors={["#FFC21F", "#F68701"]}
-                                    cardInfo={{
-                                        usageAmount: data[0].totalAmount,
-                                        cardName: data[0].cardType,
-                                        cardNumber: data[0].cardNumber,
-                                        cardExpirationPeriod: data[0].expiryDate,
-                                        cardBrand: "MATER",
-                                    }} />
-
-                                <Card gradientColors={["#C1E7F0", "#7CBBDE"]}
-                                    cardInfo={{
-                                        usageAmount: data[1].totalAmount,
-                                        cardName: data[1].cardType,
-                                        cardNumber: data[1].cardNumber,
-                                        cardExpirationPeriod: data[1].expiryDate,
-                                        cardBrand: "VISA",
-                                    }} />
-                            </div>
-                        )
-                    )}
+                            <Card gradientColors={["#C1E7F0", "#7CBBDE"]}
+                                cardInfo={{
+                                    usageAmount: cardInfo[1]?.totalAmount,
+                                    cardName: cardInfo[1]?.cardType,
+                                    cardNumber: cardInfo[1]?.cardNumber,
+                                    cardExpirationPeriod: cardInfo[1]?.expiryDate,
+                                    cardBrand: "VISA",
+                                }} />
+                        </div>
+                    ) : <LoadingSpinner text="카드 데이터 불러오는 중" />}
                 </div>
                 <div className="flex flex-col gap-4">
                     <div>

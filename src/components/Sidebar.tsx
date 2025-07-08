@@ -14,6 +14,7 @@ const menuPaths: { [key: string]: string } = {
     spending: '/spending',
     notification: '/notification',
     calendar: '/calendar',
+    consumption: '/consumption',
 };
 
 interface NavItemProps {
@@ -111,7 +112,7 @@ export default function Sidebar() {
     const router = useRouter();
     const [activeMenu, setActiveMenu] = useState<string | null>('home');
     const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({});
-    const [isHovered, setIsHovered] = useState(false);
+    const [isHovered, setIsHovered] = useState(true);
 
     const toggleMenu = (menu: string) => {
         // 축소 상태에서는 토글하지 않고 바로 이동
@@ -141,9 +142,9 @@ export default function Sidebar() {
     };
 
     const handleMouseLeave = () => {
-        setIsHovered(false);
+        // setIsHovered(false);
         // 마우스가 벗어나면 모든 서브메뉴 접기
-        setExpandedMenus({});
+        // setExpandedMenus({});
     };
 
     return (
@@ -175,7 +176,13 @@ export default function Sidebar() {
                     isCollapsed={!isHovered}
                 >
                 </NavItem>
-
+                <NavItem
+                    icon={<CalendarDaysIcon width={18} height={18} />}
+                    label="Calendar"
+                    active={activeMenu === 'calendar'}
+                    onClick={() => toggleMenu('calendar')}
+                    isCollapsed={!isHovered}
+                />
                 <NavItem
                     icon={<RectangleStackIcon width={18} height={18} />}
                     label="Dashboard"
@@ -186,10 +193,9 @@ export default function Sidebar() {
                     active={activeMenu === 'dashboard'}
                     isCollapsed={!isHovered}
                 >
-                    <SubNavItem label="카드 총액" url="/dashboard/cards" />
-                    <SubNavItem label="한달 그래프" url="/dashboard/cards/graph" />
-                    <SubNavItem label="카테고리" />
-                    <SubNavItem label="소비 내역" url="/dashboard/spendingHistory" />
+                    <SubNavItem label="My Card" url="/dashboard/cards" />
+                    <SubNavItem label="Graph" url="/dashboard/cards/graph" />
+                    <SubNavItem label="Spending History" url="/dashboard/spendingHistory" />
                 </NavItem>
 
                 <NavItem
@@ -210,10 +216,16 @@ export default function Sidebar() {
                         </svg>
                     }
                     label="Consumption"
+                    hasChildren={true}
+                    expanded={expandedMenus['consumption'] || false}
                     active={activeMenu === 'consumption'}
                     onClick={() => toggleMenu('consumption')}
+                    onToggle={() => toggleSubMenu('consumption')}
                     isCollapsed={!isHovered}
-                />
+                >
+                    <SubNavItem label='Income' url='/consumption/income' />
+                    <SubNavItem label='Spending' url='/consumption/spending' />
+                </NavItem>
 
                 <NavItem
                     icon={
@@ -224,14 +236,6 @@ export default function Sidebar() {
                     label="Notification"
                     active={activeMenu === 'notification'}
                     onClick={() => toggleMenu('notification')}
-                    isCollapsed={!isHovered}
-                />
-
-                <NavItem
-                    icon={<CalendarDaysIcon width={18} height={18} />}
-                    label="Calendar"
-                    active={activeMenu === 'calendar'}
-                    onClick={() => toggleMenu('calendar')}
                     isCollapsed={!isHovered}
                 />
             </nav>

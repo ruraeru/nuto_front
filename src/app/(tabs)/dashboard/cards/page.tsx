@@ -1,5 +1,6 @@
 "use client"
 
+import LoadingSpinner from "@/components/Chart/LoadingSpinner";
 import Card from "@/components/dashboard/Card";
 import { getCards, ICardInfo } from "@/lib/card";
 import { PlusIcon } from "@heroicons/react/24/solid";
@@ -37,18 +38,22 @@ export default function Page() {
                     <div className="flex flex-col items-center gap-16">
                         <div className="flex flex-wrap gap-4 w-[716px]">
                             {isLoading ? (
-                                <div>카드 내역 불러오는 중....</div>
+                                <div className="mx-auto h-96"><LoadingSpinner text="카드 정보 불러오는 중" /></div>
                             ) : (
-                                data && data.map((card, idx) => (
-                                    <Card key={idx} gradientColors={idx % 2 == 1 ? ["#C1E7F0", "#7CBBDE"] : ["#FFC21F", "#F68701"]}
-                                        cardInfo={{
-                                            usageAmount: card.totalAmount,
-                                            cardName: card.cardType,
-                                            cardNumber: card.cardNumber,
-                                            cardExpirationPeriod: card.expiryDate,
-                                            cardBrand: "MATER",
-                                        }} />
-                                ))
+                                data && data.length > 0 ? (
+                                    data.map((card, idx) => (
+                                        <Card key={idx} gradientColors={idx % 2 == 1 ? ["#C1E7F0", "#7CBBDE"] : ["#FFC21F", "#F68701"]}
+                                            cardInfo={{
+                                                usageAmount: card.totalAmount,
+                                                cardName: card.cardType,
+                                                cardNumber: card.cardNumber,
+                                                cardExpirationPeriod: card.expiryDate,
+                                                cardBrand: "MATER",
+                                            }} />
+                                    ))
+                                ) : (
+                                    <div className="mx-auto h-96 text-4xl flex items-center font-semibold">카드 정보가 없습니다.</div>
+                                )
                             )}
                         </div>
                         <div>
