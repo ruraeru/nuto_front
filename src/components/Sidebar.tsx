@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { CalendarDaysIcon, HomeIcon, RectangleStackIcon, Squares2X2Icon } from '@heroicons/react/24/solid';
 
@@ -110,52 +110,62 @@ const SubNavItem: React.FC<{ label: string; active?: boolean; url?: string }> = 
 
 export default function Sidebar() {
     const router = useRouter();
-    const [activeMenu, setActiveMenu] = useState<string | null>('home');
-    const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({});
+    const pathname = usePathname(); // 현재 경로를 가져옵니다.
+
+    // URL 경로에 따라 현재 활성화된 메뉴를 결정합니다.
+    const activeMenu = (() => {
+        if (pathname.startsWith('/home')) return 'home';
+        if (pathname.startsWith('/dashboard')) return 'dashboard';
+        if (pathname.startsWith('/calendar')) return 'calendar';
+        if (pathname.startsWith('/consumption')) return 'consumption';
+        if (pathname.startsWith('/product')) return 'product';
+        if (pathname.startsWith('/notification')) return 'notification';
+        return null; // 기본값
+    })();
+
+    const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({
+        dashboard: pathname.startsWith('/dashboard'),
+        consumption: pathname.startsWith('/consumption'),
+    });
     const [isHovered, setIsHovered] = useState(false);
 
-    const toggleMenu = (menu: string) => {
-        // 축소 상태에서는 토글하지 않고 바로 이동
-        if (!isHovered) {
-            setActiveMenu(menu);
-            const path = menuPaths[menu] || `/${menu}`;
-            router.push(path);
-            return;
-        }
+    // 클라이언트 사이드 네비게이션 시 메뉴 상태를 동기화합니다.
+    useEffect(() => {
+        setExpandedMenus(prev => ({
+            ...prev,
+            dashboard: pathname.startsWith('/dashboard'),
+            consumption: pathname.startsWith('/consumption'),
+        }));
+    }, [pathname]);
 
-        // 확장 상태에서는 페이지 이동
-        setActiveMenu(menu);
+    const handleMenuClick = (menu: string) => {
         const path = menuPaths[menu] || `/${menu}`;
         router.push(path);
     };
 
     const toggleSubMenu = (menu: string) => {
-        // 서브메뉴만 토글 (페이지 이동 없음)
         setExpandedMenus((prev) => ({
             ...prev,
-            [menu]: !prev[menu] || false,
+            [menu]: !prev[menu],
         }));
     };
 
-    const handleMouseEnter = () => {
-        setIsHovered(true);
-    };
-
+    const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => {
         setIsHovered(false);
-        // 마우스가 벗어나면 모든 서브메뉴 접기
-        setExpandedMenus({});
+        // 마우스가 벗어날 때 경로 기반이 아닌 인터랙션으로 열린 메뉴는 닫습니다.
+        if (!pathname.startsWith('/dashboard')) {
+            setExpandedMenus(prev => ({ ...prev, dashboard: false }));
+        }
     };
 
     return (
         <div
-            //xl:left-100 z-200 lg:left-10 fixed
             className={`bg-white h-screen border-[#7CBBDE] border-1 rounded-lg p-4 flex flex-col transition-all duration-300 ease-in-out ${isHovered ? 'w-[218px]' : 'w-[70px]'}`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <div className={`mb-6 mt-2 mx-auto transition-all duration-300 ${isHovered ? '' : 'mb-4'
-                }`}>
+            <div className={`mb-6 mt-2 mx-auto transition-all duration-300 ${isHovered ? '' : 'mb-4'}`}>
                 <Image
                     src="/nuto_symbol.svg"
                     alt='nuto_symbol'
@@ -169,18 +179,15 @@ export default function Sidebar() {
                 <NavItem
                     icon={<HomeIcon width={18} height={18} />}
                     label="Home"
-                    expanded={expandedMenus['home'] || false}
-                    onClick={() => toggleMenu('home')}
-                    onToggle={() => toggleSubMenu('home')}
+                    onClick={() => handleMenuClick('home')}
                     active={activeMenu === 'home'}
                     isCollapsed={!isHovered}
-                >
-                </NavItem>
+                />
                 <NavItem
                     icon={<CalendarDaysIcon width={18} height={18} />}
                     label="Calendar"
                     active={activeMenu === 'calendar'}
-                    onClick={() => toggleMenu('calendar')}
+                    onClick={() => handleMenuClick('calendar')}
                     isCollapsed={!isHovered}
                 />
                 <NavItem
@@ -188,26 +195,23 @@ export default function Sidebar() {
                     label="Dashboard"
                     hasChildren={true}
                     expanded={expandedMenus['dashboard'] || false}
-                    onClick={() => toggleMenu('dashboard')}
+                    onClick={() => handleMenuClick('dashboard')}
                     onToggle={() => toggleSubMenu('dashboard')}
                     active={activeMenu === 'dashboard'}
                     isCollapsed={!isHovered}
                 >
-                    <SubNavItem label="My Card" url="/dashboard/cards" />
-                    <SubNavItem label="Graph" url="/dashboard/cards/graph" />
-                    <SubNavItem label="Spending History" url="/dashboard/spendingHistory" />
+                    <SubNavItem label="My Card" url="/dashboard/cards" active={pathname === '/dashboard/cards'} />
+                    <SubNavItem label="Graph" url="/dashboard/cards/graph" active={pathname === '/dashboard/cards/graph'} />
+                    <SubNavItem label="Spending History" url="/dashboard/spendingHistory" active={pathname === '/dashboard/spendingHistory'} />
                 </NavItem>
 
                 <NavItem
                     icon={<Squares2X2Icon width={18} height={18} />}
                     label="Product"
-                    expanded={expandedMenus['product'] || false}
-                    onClick={() => toggleMenu('product')}
-                    onToggle={() => toggleSubMenu('product')}
+                    onClick={() => handleMenuClick('product')}
                     active={activeMenu === 'product'}
                     isCollapsed={!isHovered}
-                >
-                </NavItem>
+                />
 
                 <NavItem
                     icon={
@@ -219,12 +223,12 @@ export default function Sidebar() {
                     hasChildren={true}
                     expanded={expandedMenus['consumption'] || false}
                     active={activeMenu === 'consumption'}
-                    onClick={() => toggleMenu('consumption')}
+                    onClick={() => handleMenuClick('consumption')}
                     onToggle={() => toggleSubMenu('consumption')}
                     isCollapsed={!isHovered}
                 >
-                    <SubNavItem label='Income' url='/consumption/income' />
-                    <SubNavItem label='Spending' url='/consumption/spending' />
+                    <SubNavItem label='Income' url='/consumption/income' active={pathname === '/consumption/income'} />
+                    <SubNavItem label='Spending' url='/consumption/spending' active={pathname === '/consumption/spending'} />
                 </NavItem>
 
                 <NavItem
@@ -235,7 +239,7 @@ export default function Sidebar() {
                     }
                     label="Notification"
                     active={activeMenu === 'notification'}
-                    onClick={() => toggleMenu('notification')}
+                    onClick={() => handleMenuClick('notification')}
                     isCollapsed={!isHovered}
                 />
             </nav>
