@@ -112,7 +112,7 @@ export default function Sidebar() {
     const router = useRouter();
     const [activeMenu, setActiveMenu] = useState<string | null>('home');
     const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({});
-    const [isHovered, setIsHovered] = useState(true);
+    const [isHovered, setIsHovered] = useState(false);
 
     const toggleMenu = (menu: string) => {
         // 축소 상태에서는 토글하지 않고 바로 이동
@@ -142,9 +142,9 @@ export default function Sidebar() {
     };
 
     const handleMouseLeave = () => {
-        // setIsHovered(false);
+        setIsHovered(false);
         // 마우스가 벗어나면 모든 서브메뉴 접기
-        // setExpandedMenus({});
+        setExpandedMenus({});
     };
 
     return (
