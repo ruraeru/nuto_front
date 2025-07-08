@@ -3,7 +3,7 @@ import React from "react";
 import LoadingSpinner from "../Chart/LoadingSpinner";
 
 
-export default function ExpenseCompareCard({ expense, text }: { expense: ICompareExpenseIncomeProps | undefined, text: string }) {
+export default function ExpenseCompareCard({ expense, text, isIncome = false }: { expense: ICompareExpenseIncomeProps | undefined, text: string, isIncome?: boolean }) {
     if (!expense) {
         return (
             <div className="mb-4 flex flex-col gap-4">
@@ -14,18 +14,18 @@ export default function ExpenseCompareCard({ expense, text }: { expense: ICompar
             </div>
         )
     }
-    const compareResult = CompareExpense(expense);
-
+    const compareResult = CompareExpense(expense, isIncome);
+    const { title, money, comment } = compareResult;
     return (
         <div className="mb-4 flex flex-col gap-4">
             <p className="font-semibold text-2xl">{text}</p>
             <div className="bg-gradient-to-tr from-[#7CBBDE] to-[#C1E7F0] w-[270px] h-[235px] rounded-2xl shadow-xl flex flex-col justify-center items-center text-white">
                 <React.Fragment>
-                    <p>저번달 대비</p>
+                    <p>{title}</p>
                     <p className="font-semibold text-4xl py-3">
-                        {CompareExpense(expense)}
+                        {money}
                     </p>
-                    <p>더 지출하였습니다</p>
+                    <p>{comment}</p>
                 </React.Fragment>
             </div>
         </div>

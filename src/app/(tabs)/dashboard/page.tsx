@@ -10,7 +10,7 @@ import PieChart from "@/components/Chart/PieChart";
 import { getConsumeMonth, getIncomeMonth } from "@/api/dashboard";
 import LoadingSpinner from "@/components/Chart/LoadingSpinner";
 import React from "react";
-import ExpenseCompareCard from "@/components/dashboard/ExpenseCompareCard";
+import ExpenseCompareCard from "@/components/dashboard/ConsumptionCompareCard";
 
 export default function Page() {
     const { data, isLoading } = useQuery<ICardInfo[]>({
@@ -143,7 +143,7 @@ export default function Page() {
                 <div className="flex flex-col justify-center gap-4">
                     <div className="flex flex-col justify-center gap-4">
                         <ExpenseCompareCard expense={consumeMonth} text="이번달 내 지출은?" />
-                        <ExpenseCompareCard expense={incomeMonth} text="이번달 내 수익은?" />
+                        <ExpenseCompareCard expense={incomeMonth} text="이번달 내 수익은?" isIncome />
                     </div>
                     <div>
                         <div>
