@@ -5,11 +5,13 @@ import React, { useEffect, useState } from 'react';
 interface TagInputProps {
     initialTags?: string[];
     onTagsChange?: (tags: string[]) => void;
+    disabled?: boolean;
 }
 
 const TagInput: React.FC<TagInputProps> = ({
     initialTags = [],
-    onTagsChange
+    onTagsChange,
+    disabled
 }) => {
     const [tags, setTags] = useState<string[]>(initialTags);
     const [inputValue, setInputValue] = useState<string>('');
@@ -91,6 +93,7 @@ const TagInput: React.FC<TagInputProps> = ({
                                             setShowInput(false);
                                         }
                                     }}
+                                    disabled={disabled}
                                     className="text-sm bg-transparent outline-none min-w-0 w-16"
                                     placeholder="태그명"
                                     autoFocus
@@ -108,17 +111,6 @@ const TagInput: React.FC<TagInputProps> = ({
                     </div>
                 </div>
             </div>
-            <div className='flex items-center gap-4'>
-                <div className="flex items-center gap-2">
-                    <input type="radio" className="cursor-pointer size-8 appearance-none border rounded-lg checked:bg-[#7CBBDE] checked:border-none" name='type' />
-                    <label>수입</label>
-                </div>
-                <div className="flex items-center gap-2">
-                    <input type="radio" className="cursor-pointer size-8 appearance-none border rounded-lg checked:bg-[#7CBBDE] checked:border-none" name='type' />
-                    <label>지출</label>
-                </div>
-            </div>
-
             {/* <div className="mt-4 text-xs text-gray-500">
                 • 태그를 클릭하여 삭제할 수 있습니다 <br />
                 • Enter 키로 태그를 추가하거나 ESC 키로 취소할 수 있습니다
