@@ -1,4 +1,4 @@
-"use clinet"
+"use client"
 
 import { Bar } from 'react-chartjs-2';
 import {
@@ -9,6 +9,7 @@ import {
     Title,
     Tooltip,
     Legend,
+    ChartOptions,
 } from 'chart.js';
 import { useQuery } from '@tanstack/react-query';
 import { getCardsConsumeHistory } from '@/lib/fetchChartData';
@@ -41,7 +42,7 @@ const BarChart = () => {
     };
 
 
-    const options = {
+    const options: ChartOptions<'bar'> = {
         scales: {
             x: {
                 title: {
@@ -60,8 +61,8 @@ const BarChart = () => {
                 },
                 ticks: {
                     stepSize: 5000, // y축 간격 설정 (숫자 데이터에 맞춰 조정)
-                    callback: function (value: number, index: number, ticks: any) {
-                        return value.toLocaleString(); // y축 값에 쉼표 표시
+                    callback: function (value: string | number, index: number, ticks: any) {
+                        return Number(value).toLocaleString(); // y축 값에 쉼표 표시
                     }
                 },
                 border: {

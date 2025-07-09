@@ -13,7 +13,6 @@ import {
 } from "chart.js";
 import { useQuery } from "@tanstack/react-query";
 import { getConsumeByCategory } from "@/api/dashboard";
-import LoadingSpinner from "./LoadingSpinner";
 
 // Chart.js 컴포넌트 및 플러그인 등록
 ChartJS.register(
@@ -35,11 +34,11 @@ export default function DoughnutChart() {
     // 도넛 차트 데이터 정의
     const data = {
         // 이미지에 맞춰 레이블 변경
-        labels: chartData?.labels,
+        labels: chartData?.labels || [],
         datasets: [
             {
                 // 이미지에 맞춰 데이터 값 변경 (총합 100)
-                data: chartData?.data, // 이미지 비율에 맞춰 데이터 조정
+                data: chartData?.data || [], // 이미지 비율에 맞춰 데이터 조정
                 backgroundColor: [ // 이미지에 맞춰 배경 색상 변경
                     '#FFC21F', // 식비 (짙은 오렌지색)
                     '#ffc31f81', // 취미생활 (밝은 살구색)
@@ -58,6 +57,9 @@ export default function DoughnutChart() {
         ],
     };
 
+    // 중앙 텍스트용 데이터
+    const centerText = chartData?.totalMount ? chartData.totalMount.toLocaleString("ko-KR") : '0';
+
     // 도넛 차트 옵션 정의
     const options = {
         plugins: {
@@ -66,7 +68,7 @@ export default function DoughnutChart() {
             },
             tooltip: { // 툴팁(마우스 오버 시 나타나는 정보) 설정
                 callbacks: {
-                    label: function (context) { // 툴팁에 표시될 레이블 형식 정의
+                    label: function (context: any) { // 툴팁에 표시될 레이블 형식 정의
                         const label = context.label || '';
                         const value = context.dataset.data[context.dataIndex];
                         const percentage = value + '%';
@@ -75,17 +77,12 @@ export default function DoughnutChart() {
                 },
                 backgroundColor: 'rgba(0,0,0,0.7)',
                 titleColor: '#fff',
-                bodyColor: '#fff',
+                bodyColor: '#fffff',
                 padding: 10,
                 displayColors: false,
             },
             datalabels: { // chartjs-plugin-datalabels 설정 (중앙 텍스트를 위해 비활성화)
                 display: false, // 이미지에서는 차트 조각 위에 라벨이 없으므로 비활성화
-            },
-            // 중앙 텍스트 플러그인 옵션을 여기에 정의합니다.
-            centerText: {
-                display: true,
-                text: chartData?.totalMount.toLocaleString("ko-KR") // 이미지의 중앙 텍스트
             }
         },
         responsive: true,
@@ -94,8 +91,14 @@ export default function DoughnutChart() {
     };
 
     if (isLoading) {
-        return <LoadingSpinner />
+        return (
+            <div className="flex justify-center items-center h-full">
+                <div className="animate-spin rounded-full h-16 w-16 border-l-2 border-cyan-600" />
+                <p>차트 데이터 불러오는 중...</p>
+            </div>
+        )
     }
+
     return (
         <div style={{ width: "100%", maxWidth: "400px", margin: "0 auto", textAlign: "center" }}>
             {/* Doughnut 컴포넌트를 사용하여 차트 렌더링 */}
@@ -108,31 +111,25 @@ export default function DoughnutChart() {
                     plugins={[{
                         id: 'centerText',
                         beforeDraw: function (chart) {
-                            // chart.options.plugins.centerText를 통해 커스텀 옵션에 접근
-                            const centerTextOptions = chart.options.plugins.centerText;
+                            const { ctx, width, height } = chart;
+                            ctx.restore();
+                            const fontSize = (height / 114).toFixed(2);
+                            ctx.font = `bold ${fontSize}em Inter`; // 폰트 설정
+                            ctx.textBaseline = 'middle';
+                            ctx.fillStyle = '#333'; // 텍스트 색상 (어두운 회색)
 
-                            if (centerTextOptions && centerTextOptions.display) {
-                                const { ctx, width, height } = chart;
-                                ctx.restore();
-                                const fontSize = (height / 114).toFixed(2);
-                                ctx.font = `bold ${fontSize}em Inter`; // 폰트 설정
-                                ctx.textBaseline = 'middle';
-                                ctx.fillStyle = '#333'; // 텍스트 색상 (어두운 회색)
+                            const textX = Math.round((width - ctx.measureText(centerText).width) / 2);
+                            const textY = height / 2;
 
-                                const text = centerTextOptions.text; // centerTextOptions.text로 접근
-                                const textX = Math.round((width - ctx.measureText(text).width) / 2);
-                                const textY = height / 2;
-
-                                ctx.fillText(text, textX, textY);
-                                ctx.save();
-                            }
+                            ctx.fillText(centerText, textX, textY);
+                            ctx.save();
                         }
                     }]}
                 />
             </div>
             {/* 이미지 하단의 라벨 목록 */}
             <div className="mt-8 text-left w-full">
-                {chartData && (
+                {chartData && chartData.labels && (
                     chartData.labels.map((label, index) => (
                         <div key={index} className="flex justify-between items-center py-2 border-b border-gray-200 last:border-b-0">
                             <div className="flex items-center">

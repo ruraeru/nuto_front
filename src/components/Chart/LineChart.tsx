@@ -31,17 +31,17 @@ const LineChart = () => {
     });
 
     const data = {
-        labels: chartData?.labels,
+        labels: chartData?.labels || [],
         datasets: [
             {
                 label: "",
-                data: chartData?.data,
+                data: chartData?.data || [],
                 borderColor: '#7CBBDE',
                 borderWidth: 3,
                 fill: false,
                 tension: 0.4, // 선을 부드럽게 만드는 옵션
                 pointRadius: 0, // 데이터 포인트 원 숨김
-                cubicInterpolationMode: "monotone" // 선을 단조롭게 부드럽게 만듭니다.
+                cubicInterpolationMode: "monotone" as const // 타입 단언으로 정확한 타입 지정
             },
         ]
     };
@@ -49,7 +49,7 @@ const LineChart = () => {
     const options = {
         scales: {
             x: {
-                type: 'category',
+                type: 'category' as const, // 타입 단언 추가
                 title: {
                     display: false,
                     text: '일',
@@ -81,7 +81,7 @@ const LineChart = () => {
                 display: false, // 범례 숨김
             },
             tooltip: {
-                mode: 'index',
+                mode: 'index' as const, // 타입 단언 추가
                 intersect: false,
             },
         },
