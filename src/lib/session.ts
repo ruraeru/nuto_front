@@ -11,23 +11,23 @@ interface SessionData {
 interface SessionConfig {
   cookieName: string;
   password: string;
-  // cookieOptions: {
-  //   secure: boolean;
-  //   httpOnly: boolean;
-  //   sameSite: "lax" | "static" | "none";
-  //   maxAge?: number;
-  // };
+  cookieOptions: {
+    secure: boolean;
+    httpOnly: boolean;
+    sameSite: "lax" | "static" | "none";
+    maxAge?: number;
+  };
 }
 
 export const sessionConfig: SessionConfig = {
   cookieName: "nuto_session",
   password: process.env.COOKIE_PASSWORD as string,
-  // cookieOptions: {
-  //   secure: false,
-  //   httpOnly: true,
-  //   sameSite: "lax",
-  //   maxAge: 3,
-  // },
+  cookieOptions: {
+    secure: false,
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 60 * 60 * 24 * 7,
+  },
 };
 
 export default async function getSession() {
