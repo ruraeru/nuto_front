@@ -38,6 +38,7 @@ function RecieptInfoChangeForm({ initialProductData, isLoading }: { initialProdu
         //     redirect("/products");
         // }
     }, [productData]);
+
     return (
         <div className={`flex flex-col gap-5 p-5 ${isLoading && "animate-pulse"}`}>
             <div className="flex flex-col gap-5">
@@ -96,7 +97,7 @@ function RecieptInfoChangeForm({ initialProductData, isLoading }: { initialProdu
             <button disabled={isLoading} onClick={onUpload} className="h-10 disabled:bg-neutral-400 disabled:text-neutral-300 disabled:cursor-not-allowed w-full bg-cyan-500 text-white font-medium rounded-md text-center hover:bg-cyan-400 transition-colors">
                 업로드 하기!
             </button>
-        </div >
+        </div>
     );
 }
 

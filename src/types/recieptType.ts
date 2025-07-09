@@ -8,6 +8,7 @@ export interface RecieptType {
   category: string[];
   totalAmount: number;
   transactionType: TransactionType; // 수입/지출 타입 추가
+  selectedCardNumber: string;
 }
 
 export interface IinitialState {
