@@ -10,7 +10,7 @@ export default function SpendingHistory() {
             <div className="flex gap-4">
                 <div className="w-[204px] flex flex-col gap-4">
                     <div className="w-full flex flex-col gap-4">
-                        <Link href="/consumption/recieptUpload">
+                        <Link href="/consumption/receiptUpload">
                             <div className="size-[204px] bg-gray-400 rounded-4xl flex justify-center items-center">
                                 <PlusIcon className="size-10" />
                             </div>
