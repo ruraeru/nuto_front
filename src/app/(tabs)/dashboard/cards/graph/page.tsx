@@ -1,8 +1,25 @@
 "use client"
 
 import LineChart from "@/components/Chart/LineChart";
+import { useState } from "react";
 
 export default function CardsGraph() {
+    const currentYear = new Date().getFullYear();
+    const currentMonth = new Date().getMonth() + 1; // 7 (getMonth()는 0부터 시작하므로 +1)
+
+    const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+    const [selectedMonth, setSelectedMonth] = useState<number>(currentMonth);
+
+    const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedYear(Number(event.target.value));
+    };
+
+    const handleMonthChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedMonth(Number(event.target.value));
+    };
+
+    const years = [2022, 2023, 2024, 2025, 2026];
+    const months = Array.from({ length: 12 }, (_, i) => i + 1);
     return (
         <div>
             <div className="flex flex-col gap-4 mb-4">
@@ -14,20 +31,31 @@ export default function CardsGraph() {
             </div>
             <div className="flex flex-col items-center gap-4">
                 <div className="w-[1006px] h-[460px] p-5 border-2 border-[#C1E7F0] rounded-lg">
-                    <LineChart />
+                    <LineChart year={selectedYear} month={selectedMonth} />
                 </div>
-                <div className="*:border-1 *:px-3 *:py-1 *:rounded-lg flex gap-4">
-                    <select>
-                        <option>2024</option>
-                        <option>2025</option>
-                        <option>2026</option>
+                <div className="flex gap-4 p-4">
+                    <select
+                        value={selectedYear}
+                        onChange={handleYearChange}
+                        className="p-2 border rounded-md"
+                    >
+                        {years.map(year => (
+                            <option key={year} value={year}>
+                                {year}
+                            </option>
+                        ))}
                     </select>
-                    <select>
-                        <option>3월</option>
-                        <option>4월</option>
-                        <option>5월</option>
-                        <option>6월</option>
-                        <option>7월</option>
+
+                    <select
+                        value={selectedMonth}
+                        onChange={handleMonthChange}
+                        className="p-2 border rounded-md"
+                    >
+                        {months.map(month => (
+                            <option key={month} value={month}>
+                                {month}월
+                            </option>
+                        ))}
                     </select>
                 </div>
             </div>

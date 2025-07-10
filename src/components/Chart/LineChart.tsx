@@ -3,8 +3,8 @@ import {
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
-    PointElement, // Line Chart에 필요
-    LineElement,  // Line Chart에 필요
+    PointElement,
+    LineElement,
     Title,
     Tooltip,
     Legend,
@@ -13,7 +13,6 @@ import { useQuery } from '@tanstack/react-query';
 import { getConsumeByGraph } from '@/api/dashboard';
 import LoadingSpinner from './LoadingSpinner';
 
-// Chart.js 컴포넌트 등록
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -24,10 +23,15 @@ ChartJS.register(
     Legend
 );
 
-const LineChart = () => {
+interface ILineChartProps {
+    year: number;
+    month: number;
+}
+
+const LineChart = ({ year, month }: ILineChartProps) => {
     const { data: chartData, isLoading } = useQuery({
-        queryKey: ['consume-graph'],
-        queryFn: getConsumeByGraph
+        queryKey: ['consume-graph', year, month],
+        queryFn: () => getConsumeByGraph(year, month)
     });
 
     const data = {
