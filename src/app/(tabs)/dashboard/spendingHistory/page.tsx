@@ -1,6 +1,66 @@
-import { FunnelIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid"
+"use client"
 
-export default function spendingHistory() {
+import LoadingSpinner from "@/components/Chart/LoadingSpinner";
+import { getConsumption } from "@/lib/receipts";
+import { ChevronLeftIcon, ChevronRightIcon, FunnelIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react";
+
+export default function SpendingHistoryPage() {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("All");
+
+    const { data, isLoading } = useQuery({
+        queryKey: ["spending", currentPage, searchTerm, selectedCategory],
+        queryFn: () => getConsumption(currentPage, searchTerm, selectedCategory)
+    });
+
+    const handlePageChange = (page: number) => {
+        if (page >= 1 && page <= (data?.totalPages || 1)) {
+            setCurrentPage(page);
+        }
+    };
+
+    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(e.target.value);
+        setCurrentPage(1); // 검색 시 첫 페이지로 이동
+    };
+
+    const handleCategoryChange = (category: string) => {
+        setSelectedCategory(category);
+        setCurrentPage(1); // 카테고리 변경 시 첫 페이지로 이동
+    };
+
+    // 페이지 번호 배열 생성
+    const getPageNumbers = () => {
+        const pages = [];
+        const maxVisiblePages = 5;
+        const totalPages = data?.totalPages || 1;
+
+        if (totalPages <= maxVisiblePages) {
+            for (let i = 1; i <= totalPages; i++) {
+                pages.push(i);
+            }
+        } else {
+            let start = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            const end = Math.min(totalPages, start + maxVisiblePages - 1);
+
+            // 끝에서 시작점 조정
+            if (end - start + 1 < maxVisiblePages) {
+                start = Math.max(1, end - maxVisiblePages + 1);
+            }
+
+            for (let i = start; i <= end; i++) {
+                pages.push(i);
+            }
+        }
+
+        return pages;
+    };
+
+    console.log(data)
+
     return (
         <div className="">
             <div className="flex flex-col gap-4 mb-6">
@@ -18,17 +78,26 @@ export default function spendingHistory() {
                         *:p-3 *:rounded-xl
                         *:flex *:place-items-center
                         ">
-                                <li>All</li>
-                                <li>Month</li>
-                                <li>Category</li>
-                                <li>Card</li>
+                                <li
+                                    className={selectedCategory === "All" ? "bg-[#C1E7F0]" : ""}
+                                    onClick={() => handleCategoryChange("All")}
+                                >
+                                    All
+                                </li>
+                                <li onClick={() => handleCategoryChange("Month")}>Month</li>
+                                <li onClick={() => handleCategoryChange("Category")}>Category</li>
+                                <li onClick={() => handleCategoryChange("Card")}>Card</li>
                             </ul>
 
                             {/* search input */}
                             <div className="relative flex items-center w-[606px] h-[50px] rounded-xl border border-[#D1D1D1] shadow-xl">
-                                <input type="text" className="
-                                flex-auto h-full rounded-xl px-5 bg-transparent outline-none" placeholder="검색어 입력" />
-
+                                <input
+                                    type="text"
+                                    value={searchTerm}
+                                    onChange={handleSearch}
+                                    className="flex-auto h-full rounded-xl px-5 bg-transparent outline-none"
+                                    placeholder="검색어 입력"
+                                />
                                 <MagnifyingGlassIcon width={19} className="absolute right-4 cursor-pointer" />
                             </div>
                         </div>
@@ -52,67 +121,127 @@ export default function spendingHistory() {
 
                 <div className="w-[1006px]">
                     <div className="h-[500px] border-2 border-[#C1E7F0] rounded-2xl p-3">
-                        <table className="w-full">
-                            <thead className="border-b-2 border-[#C1E7F0]">
-                                <tr className="*:p-5">
-                                    <th>이름</th>
-                                    <th>금액</th>
-                                    <th>카드</th>
-                                    <th>날짜</th>
-                                    <th>카테고리</th>
-                                </tr>
-                            </thead>
-                            <tbody className="text-center font-medium *:border-b-1 *:border-[#C1E7F0] *:last:border-none ">
-                                <tr className="*:px-5 *:py-7">
-                                    <td>
-                                        버거킹
-                                    </td>
-                                    <td>10,000</td>
-                                    <td>신한은행</td>
-                                    <td>25.04.11</td>
-                                    <td>식비</td>
-                                </tr>
-                                <tr className="*:px-5 *:py-7">
-                                    <td>
-                                        버거킹
-                                    </td>
-                                    <td>10,000</td>
-                                    <td>신한은행</td>
-                                    <td>25.04.11</td>
-                                    <td>식비</td>
-                                </tr>
-                                <tr className="*:px-5 *:py-7">
-                                    <td>
-                                        버거킹
-                                    </td>
-                                    <td>10,000</td>
-                                    <td>신한은행</td>
-                                    <td>25.04.11</td>
-                                    <td>식비</td>
-                                </tr>
-                                <tr className="*:px-5 *:py-7">
-                                    <td>
-                                        버거킹
-                                    </td>
-                                    <td>10,000</td>
-                                    <td>신한은행</td>
-                                    <td>25.04.11</td>
-                                    <td>식비</td>
-                                </tr>
-                                <tr className="*:px-5 *:py-7">
-                                    <td>
-                                        버거킹
-                                    </td>
-                                    <td>10,000</td>
-                                    <td>신한은행</td>
-                                    <td>25.04.11</td>
-                                    <td>식비</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        {!isLoading ? (
+                            <div className="h-full flex flex-col">
+                                <table className="w-full">
+                                    <thead className="border-b-2 border-[#C1E7F0]">
+                                        <tr className="*:p-5">
+                                            <th>이름</th>
+                                            <th>금액</th>
+                                            <th>카드</th>
+                                            <th>날짜</th>
+                                            <th>카테고리</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="text-center font-medium *:border-b-1 *:border-[#C1E7F0] *:last:border-none ">
+                                        {data?.content && data.content.length > 0 ? (
+                                            data.content.map((info, idx) => (
+                                                <tr key={idx} className="*:px-5 *:py-7">
+                                                    <td>{info.name}</td>
+                                                    <td>{info.amount.toLocaleString("ko-KR")}원</td>
+                                                    <td>{info.cardName}</td>
+                                                    <td>{info.date}</td>
+                                                    <td>{info.categoryName}</td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan={5} className="py-20 text-lg text-gray-500">
+                                                    {searchTerm || selectedCategory !== "All"
+                                                        ? "검색 결과가 없습니다."
+                                                        : "소비 내역이 없습니다."}
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        ) : <LoadingSpinner text="소비 내역 불러오는 중" />}
+                    </div>
+
+                    {/* 페이지네이션 */}
+                    <div className="flex justify-center items-center mt-4">
+                        <ul className="flex items-center gap-2">
+                            {/* 이전 페이지 버튼 */}
+                            <li>
+                                <button
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={data?.first}
+                                    className={`p-2 rounded-lg ${data?.first
+                                        ? 'text-gray-300 cursor-not-allowed'
+                                        : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <ChevronLeftIcon width={20} />
+                                </button>
+                            </li>
+
+                            {/* 첫 페이지 */}
+                            {getPageNumbers()[0] > 1 && (
+                                <>
+                                    <li>
+                                        <button
+                                            onClick={() => handlePageChange(1)}
+                                            className="px-3 py-2 rounded-lg hover:bg-gray-100 text-sm font-medium"
+                                        >
+                                            1
+                                        </button>
+                                    </li>
+                                    {getPageNumbers()[0] > 2 && (
+                                        <li className="px-2 text-gray-500">...</li>
+                                    )}
+                                </>
+                            )}
+
+                            {/* 페이지 번호들 */}
+                            {getPageNumbers().map((page) => (
+                                <li key={page}>
+                                    <button
+                                        onClick={() => handlePageChange(page)}
+                                        className={`px-3 py-2 rounded-lg text-sm font-medium ${currentPage === page
+                                            ? 'bg-[#C1E7F0] text-[#1f2937]'
+                                            : 'hover:bg-gray-100 text-gray-700'
+                                            }`}
+                                    >
+                                        {page}
+                                    </button>
+                                </li>
+                            ))}
+
+                            {/* 마지막 페이지 */}
+                            {getPageNumbers()[getPageNumbers().length - 1] < (data?.totalPages || 1) && (
+                                <>
+                                    {getPageNumbers()[getPageNumbers().length - 1] < (data?.totalPages || 1) - 1 && (
+                                        <li className="px-2 text-gray-500">...</li>
+                                    )}
+                                    <li>
+                                        <button
+                                            onClick={() => handlePageChange(data?.totalPages || 1)}
+                                            className="px-3 py-2 rounded-lg hover:bg-gray-100 text-sm font-medium"
+                                        >
+                                            {data?.totalPages || 1}
+                                        </button>
+                                    </li>
+                                </>
+                            )}
+
+                            {/* 다음 페이지 버튼 */}
+                            <li>
+                                <button
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={data?.last}
+                                    className={`p-2 rounded-lg ${data?.last
+                                        ? 'text-gray-300 cursor-not-allowed'
+                                        : 'text-gray-700 hover:bg-gray-100'
+                                        }`}
+                                >
+                                    <ChevronRightIcon width={20} />
+                                </button>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }
