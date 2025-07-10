@@ -98,10 +98,16 @@ export async function getConsumeYear(): Promise<IConsumeYear> {
   }
 }
 
-export async function getConsumeByGraph(): Promise<IConsumeByGraph> {
-  const response = await authenticatedFetch<IConsumeByGraph>("/api/graph", {
-    method: "GET",
-  });
+export async function getConsumeByGraph(
+  year: number,
+  month: number
+): Promise<IConsumeByGraph> {
+  const response = await authenticatedFetch<IConsumeByGraph>(
+    `/api/graph?year=${year}&month=${month}`,
+    {
+      method: "GET",
+    }
+  );
   if (response.success && response.data) {
     return response.data as IConsumeByGraph;
   } else {
