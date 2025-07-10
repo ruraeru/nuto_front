@@ -1,17 +1,27 @@
-"use server";
+import { authenticatedFetch } from "@/api/api";
 
-import getSession from "./session";
+interface ICardsConsumeHistory {
+  labels: number[];
+  data: number[];
+}
 
-export async function getCardsConsumeHistory() {
-  const session = await getSession();
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/consume/graph`,
+export async function getCardsConsumeHistory(): Promise<ICardsConsumeHistory> {
+  const response = await authenticatedFetch<ICardsConsumeHistory>(
+    "/api/graph",
     {
-      headers: {
-        Authorization: `Bearer ${session.accessToken}`,
-      },
+      method: "GET",
     }
   );
-  const json = await response.json();
-  return json.data;
+
+  if (response.success && response.data) {
+    return response.data;
+  } else {
+    console.error(
+      "getCardsConsumeHistory: API 응답 실패 또는 데이터 없음",
+      response
+    );
+    throw new Error(
+      response.message || "소비 그래프 데이터를 가져오는 데 실패했습니다."
+    );
+  }
 }
