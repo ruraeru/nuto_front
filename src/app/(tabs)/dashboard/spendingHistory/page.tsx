@@ -1,7 +1,7 @@
 "use client"
 
 import LoadingSpinner from "@/components/Chart/LoadingSpinner";
-import { getConsumption } from "@/lib/receipts";
+import { getConsumption, getConsumptionCategories } from "@/lib/receipts";
 import { ChevronLeftIcon, ChevronRightIcon, FunnelIcon, MagnifyingGlassIcon } from "@heroicons/react/24/solid"
 import { useQuery } from "@tanstack/react-query"
 import { useState } from "react";
@@ -9,15 +9,20 @@ import { useState } from "react";
 export default function SpendingHistoryPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState("All");
+    const [selectedCategory, setSelectedCategory] = useState("Category");
 
-    const { data, isLoading } = useQuery({
+    const { data: spendingHistoryData, isLoading } = useQuery({
         queryKey: ["spending", currentPage, searchTerm, selectedCategory],
         queryFn: () => getConsumption(currentPage, searchTerm, selectedCategory)
     });
 
+    const { data: categories, isLoading: isCategoryLoading } = useQuery({
+        queryKey: ["spending", "categories"],
+        queryFn: getConsumptionCategories
+    })
+
     const handlePageChange = (page: number) => {
-        if (page >= 1 && page <= (data?.totalPages || 1)) {
+        if (page >= 1 && page <= (spendingHistoryData?.totalPages || 1)) {
             setCurrentPage(page);
         }
     };
@@ -36,7 +41,7 @@ export default function SpendingHistoryPage() {
     const getPageNumbers = () => {
         const pages = [];
         const maxVisiblePages = 5;
-        const totalPages = data?.totalPages || 1;
+        const totalPages = spendingHistoryData?.totalPages || 1;
 
         if (totalPages <= maxVisiblePages) {
             for (let i = 1; i <= totalPages; i++) {
@@ -59,8 +64,6 @@ export default function SpendingHistoryPage() {
         return pages;
     };
 
-    console.log(data)
-
     return (
         <div className="">
             <div className="flex flex-col gap-4 mb-6">
@@ -78,15 +81,18 @@ export default function SpendingHistoryPage() {
                         *:p-3 *:rounded-xl
                         *:flex *:place-items-center
                         ">
-                                <li
-                                    className={selectedCategory === "All" ? "bg-[#C1E7F0]" : ""}
-                                    onClick={() => handleCategoryChange("All")}
-                                >
+                                <li className={selectedCategory === "All" ? "bg-[#C1E7F0]" : ""} onClick={() => handleCategoryChange("All")}>
                                     All
                                 </li>
-                                <li onClick={() => handleCategoryChange("Month")}>Month</li>
-                                <li onClick={() => handleCategoryChange("Category")}>Category</li>
-                                <li onClick={() => handleCategoryChange("Card")}>Card</li>
+                                <li className={selectedCategory === "Month" ? "bg-[#C1E7F0]" : ""} onClick={() => handleCategoryChange("Month")}>
+                                    Month
+                                </li>
+                                <li className={selectedCategory === "Category" ? "bg-[#C1E7F0]" : ""} onClick={() => handleCategoryChange("Category")}>
+                                    Category
+                                </li>
+                                <li className={selectedCategory === "Card" ? "bg-[#C1E7F0]" : ""} onClick={() => handleCategoryChange("Card")}>
+                                    Card
+                                </li>
                             </ul>
 
                             {/* search input */}
@@ -103,18 +109,16 @@ export default function SpendingHistoryPage() {
                         </div>
 
                         <ul className="flex gap-4 *:flex *:gap-1 *:border-2 *:border-[#7CBBDE] *:px-5 *:py-2  *:rounded-3xl *:font-medium">
-                            <li>
-                                <FunnelIcon fill="none" stroke="black" width={14} />
-                                의류/화장품
-                            </li>
-                            <li>
-                                <FunnelIcon fill="none" stroke="black" width={14} />
-                                교통비
-                            </li>
-                            <li>
-                                <FunnelIcon fill="none" stroke="black" width={14} />
-                                식비
-                            </li>
+                            {!isCategoryLoading && (
+                                categories && categories.length > 0 && (
+                                    categories.map((category) => (
+                                        <li key={category.id}>
+                                            <FunnelIcon fill="none" stroke="black" width={14} />
+                                            {category.name}
+                                        </li>
+                                    ))
+                                )
+                            )}
                         </ul>
                     </div>
                 </div>
@@ -134,8 +138,8 @@ export default function SpendingHistoryPage() {
                                         </tr>
                                     </thead>
                                     <tbody className="text-center font-medium *:border-b-1 *:border-[#C1E7F0] *:last:border-none ">
-                                        {data?.content && data.content.length > 0 ? (
-                                            data.content.map((info, idx) => (
+                                        {spendingHistoryData?.content && spendingHistoryData.content.length > 0 ? (
+                                            spendingHistoryData.content.map((info, idx) => (
                                                 <tr key={idx} className="*:px-5 *:py-7">
                                                     <td>{info.name}</td>
                                                     <td>{info.amount.toLocaleString("ko-KR")}원</td>
@@ -166,8 +170,8 @@ export default function SpendingHistoryPage() {
                             <li>
                                 <button
                                     onClick={() => handlePageChange(currentPage - 1)}
-                                    disabled={data?.first}
-                                    className={`p-2 rounded-lg ${data?.first
+                                    disabled={spendingHistoryData?.first}
+                                    className={`p-2 rounded-lg ${spendingHistoryData?.first
                                         ? 'text-gray-300 cursor-not-allowed'
                                         : 'text-gray-700 hover:bg-gray-100'
                                         }`}
@@ -209,17 +213,17 @@ export default function SpendingHistoryPage() {
                             ))}
 
                             {/* 마지막 페이지 */}
-                            {getPageNumbers()[getPageNumbers().length - 1] < (data?.totalPages || 1) && (
+                            {getPageNumbers()[getPageNumbers().length - 1] < (spendingHistoryData?.totalPages || 1) && (
                                 <>
-                                    {getPageNumbers()[getPageNumbers().length - 1] < (data?.totalPages || 1) - 1 && (
+                                    {getPageNumbers()[getPageNumbers().length - 1] < (spendingHistoryData?.totalPages || 1) - 1 && (
                                         <li className="px-2 text-gray-500">...</li>
                                     )}
                                     <li>
                                         <button
-                                            onClick={() => handlePageChange(data?.totalPages || 1)}
+                                            onClick={() => handlePageChange(spendingHistoryData?.totalPages || 1)}
                                             className="px-3 py-2 rounded-lg hover:bg-gray-100 text-sm font-medium"
                                         >
-                                            {data?.totalPages || 1}
+                                            {spendingHistoryData?.totalPages || 1}
                                         </button>
                                     </li>
                                 </>
@@ -229,8 +233,8 @@ export default function SpendingHistoryPage() {
                             <li>
                                 <button
                                     onClick={() => handlePageChange(currentPage + 1)}
-                                    disabled={data?.last}
-                                    className={`p-2 rounded-lg ${data?.last
+                                    disabled={spendingHistoryData?.last}
+                                    className={`p-2 rounded-lg ${spendingHistoryData?.last
                                         ? 'text-gray-300 cursor-not-allowed'
                                         : 'text-gray-700 hover:bg-gray-100'
                                         }`}
@@ -242,6 +246,6 @@ export default function SpendingHistoryPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
