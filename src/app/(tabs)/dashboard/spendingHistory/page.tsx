@@ -70,7 +70,7 @@ export default function SpendingHistoryPage() {
                 <h1 className="text-5xl font-bold">소비 내역</h1>
                 <p className="text-lg/tight font-semibold">날짜별, 카테고리별, 금액별, 카드사별로 정리된 소비 내역을 한눈에 볼 수 있습니다.<br />언제, 어떤 항목에, 얼마를 어떤 카드로 결제했는지 쉽게 파악할 수 있어,<br />소비 패턴을 분석하고 계획적인 지출을 도와줍니다.</p>
             </div>
-            <div className="">
+            <div>
                 <div className="w-full h-36">
                     <div className="flex flex-col gap-6">
                         <div className="flex gap-6">

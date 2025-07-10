@@ -24,11 +24,11 @@ ChartJS.register(
 );
 
 interface ILineChartProps {
-    year: number;
-    month: number;
+    year?: number;
+    month?: number;
 }
 
-const LineChart = ({ year, month }: ILineChartProps) => {
+const LineChart = ({ year = new Date().getFullYear(), month = new Date().getMonth() + 1 }: ILineChartProps) => {
     const { data: chartData, isLoading } = useQuery({
         queryKey: ['consume-graph', year, month],
         queryFn: () => getConsumeByGraph(year, month)

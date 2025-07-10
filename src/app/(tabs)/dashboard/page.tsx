@@ -11,6 +11,7 @@ import { getConsumeMonth, getIncomeMonth } from "@/api/dashboard";
 import LoadingSpinner from "@/components/Chart/LoadingSpinner";
 import React from "react";
 import ExpenseCompareCard from "@/components/dashboard/ConsumptionCompareCard";
+import SpendingHistoryTable from "@/components/SpendingHistoryTable";
 
 export default function Page() {
     const { data: cardInfo } = useQuery<ICardInfo[]>({
@@ -67,8 +68,8 @@ export default function Page() {
             <div className="flex justify-center gap-4">
                 <div className="flex flex-col justify-between gap-4">
                     <div className="w-[730px] h-[460px]">
-                        <div className="flex justify-between w-full">
-                            <p className="font-semibold text-2xl">소비 그래프</p>
+                        <div className="flex items-center py-3 justify-between w-full">
+                            <p className="font-semibold text-2xl p-3">소비 그래프</p>
                             <Link href="/dashboard/cards/graph">모두 보기</Link>
                         </div>
                         <div className="h-[460px] w-full p-5 border-2 border-[#C1E7F0] rounded-xl">
@@ -76,61 +77,12 @@ export default function Page() {
                         </div>
                     </div>
                     <div className="w-[730px]">
-                        <div className="flex justify-between w-full">
+                        <div className="flex items-center py-3 justify-between w-full">
                             <p className="font-semibold text-2xl">한달 소비 내역</p>
                             <Link href="/dashboard/spendingHistory">모두 보기</Link>
                         </div>
-                        <div className="h-[463px] border-2 border-[#C1E7F0] rounded-2xl shadow-2xl p-3">
-                            <table className="w-full">
-                                <caption className="text-left p-5 text-black font-semibold text-2xl border-b-2 border-[#C1E7F0]">2025.04 소비 내역</caption>
-                                <thead className="border-b-2 border-[#C1E7F0]">
-                                    <tr className="*:p-3">
-                                        <th>이름</th>
-                                        <th>금액</th>
-                                        <th>카드</th>
-                                        <th>날짜</th>
-                                        <th>카테고리</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="text-center font-medium *:border-b-1 *:border-[#C1E7F0] *:last:border-none ">
-                                    <tr className="*:px-5 *:py-7">
-                                        <td>
-                                            버거킹
-                                        </td>
-                                        <td>10,000</td>
-                                        <td>신한은행</td>
-                                        <td>25.04.11</td>
-                                        <td>식비</td>
-                                    </tr>
-                                    <tr className="*:px-5 *:py-7">
-                                        <td>
-                                            버거킹
-                                        </td>
-                                        <td>10,000</td>
-                                        <td>신한은행</td>
-                                        <td>25.04.11</td>
-                                        <td>식비</td>
-                                    </tr>
-                                    <tr className="*:px-5 *:py-7">
-                                        <td>
-                                            버거킹
-                                        </td>
-                                        <td>10,000</td>
-                                        <td>신한은행</td>
-                                        <td>25.04.11</td>
-                                        <td>식비</td>
-                                    </tr>
-                                    <tr className="*:px-5 *:py-7">
-                                        <td>
-                                            버거킹
-                                        </td>
-                                        <td>10,000</td>
-                                        <td>신한은행</td>
-                                        <td>25.04.11</td>
-                                        <td>식비</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div className="min-h-[463px] border-2 border-[#C1E7F0] rounded-2xl shadow-2xl">
+                            <SpendingHistoryTable />
                         </div>
                     </div>
                 </div>
