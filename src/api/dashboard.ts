@@ -99,12 +99,9 @@ export async function getConsumeYear(): Promise<IConsumeYear> {
 }
 
 export async function getConsumeByGraph(): Promise<IConsumeByGraph> {
-  const response = await authenticatedFetch<IConsumeByGraph>(
-    "/api/dashboard/consume/graph",
-    {
-      method: "GET",
-    }
-  );
+  const response = await authenticatedFetch<IConsumeByGraph>("/api/graph", {
+    method: "GET",
+  });
   if (response.success && response.data) {
     return response.data as IConsumeByGraph;
   } else {

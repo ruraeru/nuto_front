@@ -1,6 +1,6 @@
 "use client"
 
-import BarChart from "@/components/Chart/BarChart";
+import LineChart from "@/components/Chart/LineChart";
 
 export default function CardsGraph() {
     return (
@@ -14,7 +14,7 @@ export default function CardsGraph() {
             </div>
             <div className="flex flex-col items-center gap-4">
                 <div className="w-[1006px] h-[460px] p-5 border-2 border-[#C1E7F0] rounded-lg">
-                    <BarChart />
+                    <LineChart />
                 </div>
                 <div className="*:border-1 *:px-3 *:py-1 *:rounded-lg flex gap-4">
                     <select>
