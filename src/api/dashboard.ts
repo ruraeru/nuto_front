@@ -28,8 +28,6 @@ interface IConsumeByGraph {
   data: number[];
 }
 
-// --- API 함수들 (authenticatedFetch 사용) ---
-
 export async function getConsumeMonth(): Promise<IConsumeMonth> {
   const response = await authenticatedFetch<IConsumeMonth>(
     "/api/dashboard/consume/month",
