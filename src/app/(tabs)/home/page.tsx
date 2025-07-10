@@ -55,7 +55,7 @@ export default async function Page() {
                                 <p className="font-medium">금융 상품 요약 설명</p>
                             </div>
                             <div className="bg-[#56A6D6] w-[218px] h-[60px] rounded-full flex items-center justify-center absolute bottom-3 right-3">
-                                <Link href={"/"} className="font-medium text-white">금융 상품 더 보기 &rarr;</Link>
+                                <Link href={"/product"} className="font-medium text-white">금융 상품 더 보기 &rarr;</Link>
                             </div>
                         </div>
                     </div>

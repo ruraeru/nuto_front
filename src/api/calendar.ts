@@ -8,7 +8,6 @@ export async function getCalendarConsumes(): Promise<CalendarEvent[]> {
     method: "GET",
   });
   if (response.success && response.data) {
-    console.log(response.data);
     return response.data;
   } else {
     console.error(
