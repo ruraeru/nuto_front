@@ -31,6 +31,37 @@ export async function getCards(): Promise<CardFetchReturnProps> {
   return json;
 }
 
+export async function getCard(cardId: number) {
+  const session = await getSession();
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cards/${cardId}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + session.accessToken,
+      },
+    }
+  );
+
+  const json = await response.json();
+  return json;
+}
+
+export async function deleteCard(cardId: number) {
+  const session = await getSession();
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/cards/delete/${cardId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + session.accessToken,
+      },
+    }
+  );
+  const json = await response.json();
+  return json;
+}
+
 // "success": true,
 //     "message": "카드 목록 조회 성공",
 //     "data": [
