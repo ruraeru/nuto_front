@@ -330,7 +330,7 @@ export default function RecieptUpload() {
                                 {!isLoading ? (
                                     cardInfo && Array.isArray(cardInfo) && cardInfo.length > 0 ? (
                                         cardInfo.map((card, idx) => (
-                                            <option key={idx} value={card.cardNumber}>
+                                            <option key={idx} value={idx + 1}>
                                                 {card.cardType} ({card.cardNumber.slice(-4)}) {/* 카드 이름과 카드 번호 마지막 4자리 표시 */}
                                             </option>
                                         ))
