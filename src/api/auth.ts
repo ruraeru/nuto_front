@@ -23,7 +23,7 @@ export interface SignUpProps {
 }
 
 export async function signUp(formData: SignUpProps): Promise<AuthApiResponse> {
-  return authFetch("signup", "POST", formData);
+  return authFetch("/auth/signup", "POST", formData);
 }
 
 export async function AuthLogin({
