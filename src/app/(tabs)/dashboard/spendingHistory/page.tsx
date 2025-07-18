@@ -246,6 +246,6 @@ export default function SpendingHistoryPage() {
                     </div>
                 </div>
             </div>
-        </div >
+        </div>
     );
 }
