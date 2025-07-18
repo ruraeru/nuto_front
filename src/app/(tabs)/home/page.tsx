@@ -1,9 +1,11 @@
+import { getConsumeTopCategories } from "@/api/main";
 import Calendar from "@/components/Calendar";
 import getSession from "@/lib/session";
 import Link from "next/link";
 
 export default async function Page() {
     const session = await getSession();
+    const consumeCategories = await getConsumeTopCategories();
 
     return (
         <div className="h-screen flex justify-center">
@@ -16,11 +18,20 @@ export default async function Page() {
                         <div className="w-[416px] h-[210px] relative">
                             <div className="flex justify-between w-full h-full bg-gradient-to-t from-[#C1E7F0] to-[#C1E7F0]/40 rounded-2xl p-4">
                                 <h3 className="font-semibold text-xl">카테고리별 소비 내역</h3>
-                                <p className="font-semibold">모두보기</p>
+                                <Link href="dashboard/spendingHistory" className="font-semibold">모두보기</Link>
                             </div>
                             <div className="absolute bottom-0 w-full flex gap-5 bg-white border border-[#D1D1D1] shadow-xl p-5 rounded-2xl justify-around items-center h-[160px]">
-
-                                <div className="flex flex-col items-center gap-3">
+                                {consumeCategories.map((category) => (
+                                    <div key={category.id} className="flex flex-col items-center gap-3">
+                                        <div className="bg-[#C1E7F0]/20 border border-[#7CBBDE] size-16 rounded-2xl flex items-center justify-center">
+                                            <p className="font-semibold">{category.id}</p>
+                                        </div>
+                                        <div>
+                                            <p className="font-medium">{category.name}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                                {/* <div className="flex flex-col items-center gap-3">
                                     <div className="bg-[#C1E7F0]/20 border border-[#7CBBDE] size-16 rounded-2xl flex items-center justify-center">
                                         <p className="font-semibold">{28}</p>
                                     </div>
@@ -45,7 +56,7 @@ export default async function Page() {
                                     <div>
                                         <p className="font-medium">식비</p>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                         <div className="flex gap-5 border border-[#C1E7F0] shadow-xl p-5 rounded-2xl w-[416px] h-[278px] items-center justify-center relative">
