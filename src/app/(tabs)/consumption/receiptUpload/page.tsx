@@ -166,35 +166,20 @@ export default function RecieptUpload() {
 
         setIsUploading(true);
 
-        try {
-            console.log('업로드 데이터:', productData);
 
-            // 방법 1: FormData로 이미지와 데이터 함께 전송
-            const result = await uploadReceiptData(productData, uploadedFile || undefined);
+        const result = await uploadReceiptData(productData, uploadedFile || undefined);
 
-            // 방법 2: JSON만 전송 (이미지 제외)
-            // const result = await uploadReceiptDataJSON(productData);
+        if (result.success) {
+            alert(result.message);
+            console.log('업로드 성공:', result.data);
 
-            // 방법 3: Base64로 변환된 이미지를 JSON에 포함하여 전송
-            // const result = await uploadReceiptWithBase64Image(productData, uploadedFile || undefined);
-
-            if (result.success) {
-                alert(result.message);
-                console.log('업로드 성공:', result.data);
-
-                // 성공 시 페이지 이동
-                redirect("/consumption");
-            } else {
-                alert(result.message);
-                console.error('업로드 실패:', result.error);
-            }
-
-        } catch (error) {
-            console.error('업로드 중 오류 발생:', error);
-            alert('업로드 중 예상치 못한 오류가 발생했습니다. 다시 시도해주세요.');
-        } finally {
-            setIsUploading(false);
+            // 성공 시 페이지 이동
+            redirect("/consumption");
+        } else {
+            alert(result.message);
+            console.error('업로드 실패:', result.error);
         }
+
     }, [productData, isUploading, uploadedFile]);
 
     const isFormValid = productData.recieptName.trim() && productData.storeName.trim() && productData.selectedCardNumber;
