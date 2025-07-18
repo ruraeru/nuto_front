@@ -1,5 +1,6 @@
 "use server";
 
+import { authenticatedFetch } from "@/api/api";
 import getSession from "./session";
 
 export interface ICardInfo {
@@ -15,20 +16,31 @@ export interface CardFetchReturnProps {
   data: ICardInfo[];
 }
 
-export async function getCards(): Promise<CardFetchReturnProps> {
+export async function addCard(data: ICardInfo) {
   const session = await getSession();
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/cards/`,
-    {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + session.accessToken,
-      },
-    }
-  );
-
-  const json = await response.json();
+  const json = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cards/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify(data),
+  }).then((res) => res.json());
   return json;
+}
+
+export async function getCards(): Promise<ICardInfo[]> {
+  const response = await authenticatedFetch("/api/cards/", {
+    method: "GET",
+  });
+  if (response.success && response.data) {
+    return response.data as ICardInfo[];
+  } else {
+    console.error("getCards: API 응답 실패 또는 데이터 없음", response);
+    throw new Error(
+      response.message || "카드 데이터를 가져오는 데 실패했습니다."
+    );
+  }
 }
 
 export async function getCard(cardId: number) {

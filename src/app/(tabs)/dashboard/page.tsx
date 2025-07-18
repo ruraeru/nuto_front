@@ -16,7 +16,7 @@ import SpendingHistoryTable from "@/components/SpendingHistoryTable";
 export default function Page() {
     const { data: cardInfo } = useQuery<ICardInfo[]>({
         queryKey: ['cards'],
-        queryFn: async () => (await getCards()).data
+        queryFn: getCards
     });
     const { data: consumeMonth } = useQuery({
         queryKey: ['consume-month'],

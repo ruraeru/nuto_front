@@ -55,7 +55,7 @@ export default function RecieptUpload() {
 
     const { data: cardInfo, isLoading } = useQuery<ICardInfo[]>({
         queryKey: ['cards'],
-        queryFn: async () => (await getCards()).data
+        queryFn: getCards
     });
 
     const handleImageChange = useCallback(async (e: ChangeEvent<HTMLInputElement>) => {
@@ -327,6 +327,7 @@ export default function RecieptUpload() {
                                 }}
                             >
                                 <option value="">카드를 선택해주세요</option>
+                                <option value="1">기타</option>
                                 {!isLoading ? (
                                     cardInfo && Array.isArray(cardInfo) && cardInfo.length > 0 ? (
                                         cardInfo.map((card, idx) => (

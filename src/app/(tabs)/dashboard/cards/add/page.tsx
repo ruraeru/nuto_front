@@ -2,15 +2,19 @@
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import { ICardInfo } from "@/lib/card";
 import Image from "next/image";
-import { useState } from "react";
+import { useActionState, useState } from "react";
+import { addCardAction } from "./actions";
 export default function AddCards() {
-    const [cardInfo, setCardInfo] = useState({
-        cardName: "",
+    const [cardInfo, setCardInfo] = useState<ICardInfo>({
         cardNumber: "",
-        cardExpirationPeriod: ""
+        totalAmount: 0,
+        cardType: "",
+        expiryDate: "",
     });
 
+    const [state, aciton] = useActionState(addCardAction, null);
     const handleCardInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setCardInfo(prev => {
@@ -40,13 +44,13 @@ export default function AddCards() {
                         <div>
                             <p className="text-2xl font-medium text-white">카드 명칭</p>
                             <div className="w-[150px] h-[30px] border border-white">
-                                <p className="text-[26px] font-medium h-full -mt-1">{cardInfo.cardName}</p>
+                                <p className="text-[26px] font-medium h-full -mt-1">{cardInfo.cardType}</p>
                             </div>
                         </div>
                         <div>
                             <p className="text-2xl font-medium text-white">VALID THRU</p>
                             <div className="w-[150px] h-[30px] border border-white">
-                                <p className="text-[26px] font-medium h-full -mt-1">{cardInfo.cardExpirationPeriod}</p>
+                                <p className="text-[26px] font-medium h-full -mt-1">{cardInfo.expiryDate}</p>
                             </div>
                         </div>
                     </div>
@@ -60,14 +64,14 @@ export default function AddCards() {
                 </div>
 
 
-                <div className="w-[365px] h-[366px] flex flex-col">
+                <form action={aciton} className="w-[365px] h-[366px] flex flex-col">
                     <div className="flex flex-col gap-8 mb-4">
-                        <Input label="카드 명칭" name="cardName" placeholder="카드 이름을 작성해주세요" onChange={handleCardInfo} />
-                        <Input label="유효 기간" name="cardExpirationPeriod" placeholder="카드 유효 기간을 작성해주세요" onChange={handleCardInfo} />
+                        <Input label="카드 명칭" name="cardType" placeholder="카드 이름을 작성해주세요" onChange={handleCardInfo} />
+                        <Input label="유효 기간" name="expiryDate" placeholder="카드 유효 기간을 작성해주세요" onChange={handleCardInfo} />
                         <Input label="카드 번호" name="cardNumber" placeholder="카드 번호를 작성해주세요" onChange={handleCardInfo} />
                     </div>
                     <Button text="등록하기" />
-                </div>
+                </form>
             </div>
         </div>
     )
