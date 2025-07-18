@@ -15,7 +15,7 @@ export async function verificationEmailCode(
 }
 
 export interface SignUpProps {
-  userid: string;
+  userId: string;
   name: string;
   password: string;
   age: number;
@@ -23,7 +23,7 @@ export interface SignUpProps {
 }
 
 export async function signUp(formData: SignUpProps): Promise<AuthApiResponse> {
-  return authFetch("/auth/signup", "POST", formData);
+  return authFetch("signup", "POST", formData);
 }
 
 export async function AuthLogin({

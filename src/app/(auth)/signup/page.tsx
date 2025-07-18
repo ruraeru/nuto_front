@@ -2,9 +2,9 @@
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { sendEmailCode, signUp, SignUpProps, verificationEmailCode } from "@/api/auth";
-import Link from "next/link";
+import { sendEmailCode, signUp, verificationEmailCode } from "@/api/auth";
 import { useState } from "react";
+import { redirect } from "next/navigation";
 
 export default function SignUpPage() {
     const [emailInfo, setEmailInfo] = useState({
@@ -79,17 +79,19 @@ export default function SignUpPage() {
             alert("이메일 인증을 완료해주세요.");
             return;
         }
-        try {
-            const response = await signUp({
-                userid: emailInfo.email,
-                name: formData.name,
-                password: formData.password,
-                age: formData.age,
-                job: formData.job
-            });
-            alert(response.message);
-        } catch (error) {
-            console.error("회원가입 실패:", error);
+        const response = await signUp({
+            userId: emailInfo.email,
+            name: formData.name,
+            password: formData.password,
+            age: formData.age,
+            job: formData.job
+        });
+        if (response.success) {
+            alert("회원가입 성공");
+            redirect("/home");
+        }
+        else {
+            console.error("회원가입 실패:", response.error);
             alert("회원가입 실패, 다시 시도해주세요.");
         }
     };
@@ -97,13 +99,14 @@ export default function SignUpPage() {
 
     return (
         <div className="flex justify-center items-center h-screen">
-            <div className="flex flex-col items-center w-[670px] h-[770px] bg-gradient-to-b from-[#7CBBDE] to-[#FFFFFF] shadow-2xl p-5 rounded-2xl">
+            <div className="flex flex-col items-center w-[670px] h-fit bg-gradient-to-b from-[#7CBBDE] to-[#FFFFFF] shadow-2xl p-5 rounded-2xl">
                 <div>
                     <h1 className="text-4xl py-8 font-bold">회원가입</h1>
                 </div>
-                <div className="w-3/4 flex flex-col gap-5">
-                    <div className="flex justify-center items-center gap-5">
+                <div className="flex flex-col gap-5 w-full px-20">
+                    <div className="flex justify-between items-center gap-5 w-full">
                         <Input
+                            style={{ width: "300px" }}
                             value={emailInfo.email}
                             onChange={onChange}
                             label=""
@@ -112,18 +115,20 @@ export default function SignUpPage() {
                             type="email"
                             disabled={isEmailVerified} // 인증 성공 시 비활성화
                         />
-                        <div className="w-[100px]">
+                        <div>
                             <button
                                 onClick={handleSendEmailCode}
-                                className={`py-2 px-4 rounded transition-colors ${isEmailVerified ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                                className={`text-sm font-medium px-4 py-2 rounded-4xl
+                                 transition-colors ${isEmailVerified ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#C1E7F0] hover:bg-[#C1E7F0]/50'}`}
                                 disabled={isEmailVerified} // 인증 성공 시 비활성화
                             >
                                 이메일 인증
                             </button>
                         </div>
                     </div>
-                    <div className="flex justify-center items-center gap-5">
+                    <div className="flex justify-between items-center gap-5">
                         <Input
+                            style={{ width: "300px" }}
                             value={emailInfo.code}
                             onChange={onChange}
                             label=""
@@ -134,7 +139,8 @@ export default function SignUpPage() {
                         />
                         <button
                             onClick={handleVerificationEmailCode}
-                            className={`py-2 px-4 rounded transition-colors ${isEmailVerified ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'}`}
+                            className={`text-sm font-medium px-4 w-24 py-2 rounded-4xl
+                                 transition-colors ${isEmailVerified ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#C1E7F0] hover:bg-[#C1E7F0]/50'}`}
                             disabled={isEmailVerified} // 인증 성공 시 비활성화
                         >
                             코드 확인
