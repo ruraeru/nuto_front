@@ -1,8 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# nuto - 소비 관리 및 금융 상품 추천 서비스
 
-## Getting Started
+nuto는 사용자가 자신의 소비를 쉽게 관리하고, 개인화된 대시보드를 통해 소비 습관을 분석할 수 있도록 돕는 웹 애플리케이션입니다. 또한, 사용자의 소비 패턴에 기반하여 최적의 금융 상품을 추천해주는 기능을 제공합니다.
 
-First, run the development server:
+## ✨ 주요 기능
+
+- **소비 내역 관리**: 지출 내역을 간편하게 기록하고 카테고리별로 관리할 수 있습니다.
+- **영수증 등록**: 영수증 사진을 업로드하여 자동으로 소비 내역을 인식하고 등록합니다.
+- **개인화 대시보드**: 다양한 차트와 그래프를 통해 자신의 소비 현황을 한눈에 파악할 수 있습니다.
+- **금융 상품 추천**: 사용자의 소비 습관을 분석하여 가장 적합한 신용카드, 예적금 등 금융 상품을 추천합니다.
+
+## 🛠️ 기술 스택
+
+- **프레임워크**: Next.js
+- **언어**: TypeScript
+- **스타일링**: Tailwind CSS
+- **상태 관리**: React Query / Zustand
+- **차트**: Chart.js
+
+## 🚀 시작하기
+
+먼저, 개발 서버를 실행하세요:
 
 ```bash
 npm run dev
@@ -13,24 +30,3 @@ pnpm dev
 # or
 bun dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
