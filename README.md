@@ -1,4 +1,4 @@
-# 구현 내용 보기
+# 구현된 프로젝트 보러가기
 <a href="https://www.notion.so/ruraeru/nuto-24e575003f8f80f2a299efebfbd12c5a?source=copy_link">노션으로 보러가기</a>
 # nuto - 소비 관리 및 금융 상품 추천 서비스
 
